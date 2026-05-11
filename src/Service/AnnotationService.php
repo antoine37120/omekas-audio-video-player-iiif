@@ -41,7 +41,7 @@ class AnnotationService
             $data['resource_id'],
             $publicId,
             $data['time'],
-            $data['time_end'],
+            $data['end_time'],
             $data['title'],
             $data['date'] ?? null,
             $description,
@@ -63,6 +63,9 @@ class AnnotationService
     public function update($id, array $data)
     {
         $sets = [];
+        if (isset ($data['end_time'])) {
+            $data  ['time_end'] = $data['end_time'];
+        }
         $params = [];
         foreach ($data as $key => $value) {
             if (in_array($key, ['resource_id', 'public_id', 'time', 'time_end', 'title', 'date', 'description', 'author_id'])) {
