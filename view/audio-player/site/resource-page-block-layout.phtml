@@ -1,0 +1,19 @@
+<?php
+$media = $media ?? null;
+$resource = $resource ?? null;
+?>
+
+<?php if ($media): ?>
+    <div class="audio-player-resource-block">
+        <?php echo $this->audioPlayer($media); ?>
+    </div>
+<?php elseif (isset($reasons) && !empty($reasons)): ?>
+    <div class="audio-player-debug alert alert-warning">
+        <p><strong><?php echo $this->translate('AudioPlayer Debug:'); ?></strong></p>
+        <ul>
+            <?php foreach ($reasons as $reason): ?>
+                <li><?php echo $this->escapeHtml($this->translate($reason)); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

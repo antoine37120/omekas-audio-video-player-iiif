@@ -1,0 +1,132 @@
+<div class="field">
+    <div class="field-meta">
+        <label for="waveform_stroke_color"><?php echo $this->translate('Waveform Stroke Color'); ?></label>
+    </div>
+    <div class="inputs">
+        <input type="text" name="waveform_stroke_color" id="waveform_stroke_color" value="<?php echo $this->escapeHtml($waveform_stroke_color); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="waveform_stroke_width"><?php echo $this->translate('Waveform Stroke Width'); ?></label>
+    </div>
+    <div class="inputs">
+        <input type="number" name="waveform_stroke_width" id="waveform_stroke_width" value="<?php echo $this->escapeHtml($waveform_stroke_width); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="annotation_min_time_to_display"><?php echo $this->translate('Annotation Min Time to Display'); ?></label>
+    </div>
+    <div class="inputs">
+        <input type="number" name="annotation_min_time_to_display" id="annotation_min_time_to_display" value="<?php echo $this->escapeHtml($annotation_min_time_to_display); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="annotation_properties_to_display"><?php echo $this->translate('Annotation Properties to Display'); ?></label>
+    </div>
+    <div class="inputs">
+        <input type="text" name="annotation_properties_to_display" id="annotation_properties_to_display" value="<?php echo $this->escapeHtml($annotation_properties_to_display); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="media_url_pattern"><?php echo $this->translate('Media URL Pattern'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Pattern for the media URL. Use tokens like {bibo:locator} to inject metadata values.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="media_url_pattern" id="media_url_pattern" value="<?php echo $this->escapeHtml($media_url_pattern); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="waveform_url_pattern"><?php echo $this->translate('Waveform URL Pattern'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Pattern for the waveform URL. Use tokens like {bibo:locator} to inject metadata values.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="waveform_url_pattern" id="waveform_url_pattern" value="<?php echo $this->escapeHtml($waveform_url_pattern); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="subtitles_url_pattern"><?php echo $this->translate('Subtitles API URL Pattern'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Pattern for the subtitles API URL. Use tokens like {bibo:locator}. The API should return a JSON with url and language_code keys.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="subtitles_url_pattern" id="subtitles_url_pattern" value="<?php echo $this->escapeHtml($subtitles_url_pattern); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="format_property"><?php echo $this->translate('Format Property'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Property used to check the media format (e.g. dcterms:format).'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="format_property" id="format_property" value="<?php echo $this->escapeHtml($format_property); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="cote_property"><?php echo $this->translate('Cote Property'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Property used for the media cote (e.g. crem:cote).'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="cote_property" id="cote_property" value="<?php echo $this->escapeHtml($cote_property); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="debug_display"><?php echo $this->translate('Debug Display'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Display a message explaining why the player is not shown if conditions are not met.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="checkbox" name="debug_display" id="debug_display" value="1" <?php echo $debug_display ? 'checked' : ''; ?>>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="colors"><?php echo $this->translate('Interface Colors (JSON)'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('JSON object for player colors (e.g. {"primary": "#ff0000"}).'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="colors" id="colors" value="<?php echo $this->escapeHtml($colors); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="playback_rates"><?php echo $this->translate('Playback Rates'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Comma-separated list of playback rates (e.g. [0.5, 1, 1.5, 2, 4]).'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="playback_rates" id="playback_rates" value="<?php echo $this->escapeHtml($playback_rates); ?>">
+    </div>
+</div>
+

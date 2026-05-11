@@ -1,0 +1,103 @@
+<?php
+/*
+$this->headLink()->appendStylesheet('https://vjs.zencdn.net/8.10.0/video-js.css');
+$this->headScript()->appendFile('https://vjs.zencdn.net/8.10.0/video.min.js');
+$this->headScript()->appendFile('https://unpkg.com/wavesurfer.js@6/dist/wavesurfer.min.js');
+$this->headScript()->appendFile('https://unpkg.com/videojs-wavesurfer/dist/videojs.wavesurfer.min.js');
+$this->headScript()->appendFile('https://unpkg.com/wavesurfer.js@6/dist/plugin/wavesurfer.timeline.min.js');
+$this->headScript()->appendFile('https://unpkg.com/wavesurfer.js@6/dist/plugin/wavesurfer.regions.min.js');
+$this->headLink()->appendStylesheet('https://unpkg.com/videojs-wavesurfer/dist/css/videojs.wavesurfer.css');
+*/
+// Load custom module script
+$this->headLink()->appendStylesheet($this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.css', 'AudioPlayer'));
+//$this->headScript()->appendFile($this->assetUrl('js/player-iiif-dependencies.js', 'AudioPlayer'));
+$this->headScript()->appendFile(
+        $this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.js', 'AudioPlayer'),
+        'module'
+);
+
+?>
+
+<?php if ($media): ?>
+<?php
+    $siteSlug = $this->params()->fromRoute('site-slug');
+// L'URL de base pour le CRUD des annotations (via le contrôleur Site)
+    $apiBaseUrl = $this->url('site/audio-player/annotation', ['site-slug' => $siteSlug], ['force_canonical' => true]);
+    $resourceId = $media ? $media->id() : '';
+    $mediaId = $media ? $media->id() : '';
+    $mediaUrl = $mediaUrl ?? ($media ? $media->originalUrl() : '');
+    $waveformUrl = $waveformUrl ?? (isset($mediaUrl) ? rtrim($mediaUrl, '/') . '/waveform.json' : '');
+    $subtitlesJson = $subtitlesJson ?? '[]';
+    // Génération de l'URL vers l'action IIIF du contrôleur Site
+    $iiifUrl = $this->url(
+            'site/audio-player/annotation-iiif',
+            ['site-slug' => $siteSlug, 'id' => $mediaId],
+            ['force_canonical' => true]
+    );
+$waveformStrokeColor = $this->setting('audioplayer_waveform_stroke_color', 'rgba(0, 0, 0, 0.18)');
+$waveformStrokeWidth = $this->setting('audioplayer_waveform_stroke_width', '1');
+$annotationMinTimeToDisplay = $this->setting('audioplayer_annotation_min_time_to_display', '15');
+$annotationPropertiesToDisplay = $this->setting('audioplayer_annotation_properties_to_display', 'time,text,creator.id');
+$colors = $this->setting('audioplayer_colors', '');
+$playbackRates = $this->setting('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]');
+$canAddAnnotation = $this->identity() ? 'true' : 'false';
+
+// Génération de l'URL pour l'embed (utilisée pour l'iframe)
+$embedUrl = $this->url(
+    'site/audio-player/embed',
+    ['site-slug' => $siteSlug, 'id' => $media->item()->id()],
+    ['force_canonical' => true]
+);
+?>
+<style>
+    annotation-player-iiif * {
+
+        line-height: normal;
+    }
+    annotation-player-iiif .player-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: initial;
+        line-height: normal;
+    }
+</style>
+
+<div id="player-container">
+    <annotation-player-iiif
+        api-base-url="<?php echo $this->escapeHtml($apiBaseUrl); ?>"
+        resource-id="<?php echo $this->escapeHtml($resourceId); ?>"
+        iiif-annotation-list-url="<?php echo $this->escapeHtml($iiifUrl); ?>"
+        media-url="<?php echo $this->escapeHtml($mediaUrl); ?>"
+        media-type="<?php echo $this->playerService->getMediaType($media); ?>"
+        wave-form-url="<?php echo $this->escapeHtml($waveformUrl); ?>"
+        waveform-stroke-color="<?php echo $this->escapeHtml($waveformStrokeColor); ?>"
+        waveform-stroke-width="<?php echo $this->escapeHtml($waveformStrokeWidth); ?>"
+        annotation-min-time-to-display="<?php echo $this->escapeHtml($annotationMinTimeToDisplay); ?>"
+        annotation-properties-to-display="<?php echo $this->escapeHtml($annotationPropertiesToDisplay); ?>"
+        can-add-annotation="<?php echo $canAddAnnotation; ?>"
+        can-edit-all-annotation="false"
+        iiif-permissions-path="omeka:permissions"
+        permissions-map="add:create,edit:edit,delete:delete"
+        permission-error-selector="#perm-error-msg"
+        share-iframe-url="<?php echo $this->escapeHtml($embedUrl); ?>"
+        playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
+        <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
+        subtitle-files-url='<?php echo $this->escapeHtml($subtitlesJson); ?>'
+    ></annotation-player-iiif>
+</div>
+<!-- Message d'erreur personnalisé pour les permissions -->
+<div id="perm-error-msg" style="display: none;">
+    <p style="margin: 0;"><strong>Accès refusé !</strong> Vous ne possédez pas les droits nécessaires pour effectuer cette action sur cette annotation.</p>
+</div>
+<div style="margin-top: 20px; color: #666;">
+    <p><strong>Instructions:</strong></p>
+    <ul>
+        <li>Double-click on the timeline to create a new annotation.</li>
+        <li>Drag items to move them.</li>
+        <li>Drag edges of items to resize them.</li>
+        <li>Click an item to seek the audio.</li>
+    </ul>
+</div>
+
+<?php endif; ?>

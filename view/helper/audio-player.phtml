@@ -1,0 +1,108 @@
+<?php
+// Fonction helper pour obtenir le type MIME
+function getMimeType($url) {
+    $extension = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'mp3' => 'audio/mpeg',
+        'wav' => 'audio/wav',
+        'ogg' => 'audio/ogg',
+        'flac' => 'audio/flac',
+        'm4a' => 'audio/mp4',
+        'aac' => 'audio/aac',
+        'wma' => 'audio/x-ms-wma'
+    ];
+
+    return isset($mimeTypes[$extension]) ? $mimeTypes[$extension] : 'audio/mpeg';
+}
+?>
+ggggg
+<?php if (!empty($audioUrls)): ?>
+    <div class="audio-player-container">
+        <style>
+            .audio-player-container {
+                margin: 15px 0;
+                padding: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
+            .audio-player-item {
+                margin-bottom: 10px;
+            }
+
+            .audio-player-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .audio-player-title {
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+            }
+
+            .audio-player-controls {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .audio-player-controls audio {
+                width: 100%;
+                height: 40px;
+            }
+
+            .audio-download-link {
+                margin-left: 10px;
+                font-size: 0.9em;
+            }
+
+            .audio-download-link a {
+                color: #007cba;
+                text-decoration: none;
+            }
+
+            .audio-download-link a:hover {
+                text-decoration: underline;
+            }
+        </style>
+
+        <h4><?php echo $this->translate('Lecteur Audio'); ?> icicici </h4>
+
+        <?php foreach ($audioUrls as $audio): ?>
+            <div class="audio-player-item">
+                <div class="audio-player-title">
+                    <?php echo $this->escapeHtml($audio['title']); ?>
+                </div>
+                <div class="audio-player-controls">
+                    <audio controls preload="metadata">
+                        <source src="<?php echo $this->escapeHtmlAttr($audio['url']); ?>" type="<?php echo getMimeType($audio['url']); ?>">
+                        <?php echo $this->translate('Votre navigateur ne supporte pas l\'élément audio.'); ?>
+                    </audio>
+                    <span class="audio-download-link">
+                    <a href="<?php echo $this->escapeHtmlAttr($audio['url']); ?>" download target="_blank">
+                        <?php echo $this->translate('Télécharger'); ?>
+                    </a>
+                </span>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gérer les erreurs de chargement audio
+            const audioElements = document.querySelectorAll('.audio-player-container audio');
+            audioElements.forEach(function(audio) {
+                audio.addEventListener('error', function() {
+                    const container = this.closest('.audio-player-item');
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'audio-error';
+                    errorMsg.style.color = '#d32f2f';
+                    errorMsg.style.fontSize = '0.9em';
+                    errorMsg.textContent = '<?php echo $this->translate('Erreur lors du chargement du fichier audio.'); ?>';
+                    container.appendChild(errorMsg);
+                });
+            });
+        });
+    </script>
+<?php endif; ?>
