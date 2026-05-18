@@ -36,6 +36,16 @@
 
 <div class="field">
     <div class="field-meta">
+        <label for="player_height">Player Height</label>
+        <div class="field-description">Height of the player in pixels (e.g. "400px" or "auto"). Leave empty for default.</div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="player_height" id="player_height" value="<?php echo $this->escapeHtml($player_height); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
         <label for="media_url_pattern"><?php echo $this->translate('Media URL Pattern'); ?></label>
         <div class="field-description">
             <?php echo $this->translate('Pattern for the media URL. Use tokens like {bibo:locator} to inject metadata values.'); ?>
@@ -78,21 +88,42 @@
         </div>
     </div>
     <div class="inputs">
-        <input type="text" name="format_property" id="format_property" value="<?php echo $this->escapeHtml($format_property); ?>">
+        <?php echo $this->propertySelect([
+            'name' => 'format_property',
+            'attributes' => [
+                'id' => 'format_property',
+                'value' => $format_property,
+                'class' => 'chosen-select',
+            ],
+            'options' => [
+                'term_as_value' => true,
+            ],
+        ]); ?>
     </div>
 </div>
 
 <div class="field">
     <div class="field-meta">
-        <label for="cote_property"><?php echo $this->translate('Cote Property'); ?></label>
+        <label for="id_property"><?php echo $this->translate('ID Property'); ?></label>
         <div class="field-description">
-            <?php echo $this->translate('Property used for the media cote (e.g. crem:cote).'); ?>
+            <?php echo $this->translate('Property used for the media ID (e.g. crem:cote).'); ?>
         </div>
     </div>
     <div class="inputs">
-        <input type="text" name="cote_property" id="cote_property" value="<?php echo $this->escapeHtml($cote_property); ?>">
+        <?php echo $this->propertySelect([
+            'name' => 'id_property',
+            'attributes' => [
+                'id' => 'id_property',
+                'value' => $id_property,
+                'class' => 'chosen-select',
+            ],
+            'options' => [
+                'term_as_value' => true,
+            ],
+        ]); ?>
     </div>
 </div>
+
 
 <div class="field">
     <div class="field-meta">
@@ -114,7 +145,25 @@
         </div>
     </div>
     <div class="inputs">
-        <input type="text" name="colors" id="colors" value="<?php echo $this->escapeHtml($colors); ?>">
+        <textarea name="colors" id="colors" rows="4" style="width: 100%; font-family: monospace;"><?php echo $this->escapeHtml($colors); ?></textarea>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="help_text"><?php echo $this->translate('Help Text (HTML)'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('HTML content displayed in the help popup of the audio/video player.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <?php echo $this->ckEditor(); ?>
+        <textarea name="help_text" id="help_text" class="wysiwyg"><?php echo $this->escapeHtml($help_text); ?></textarea>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('#help_text').ckeditor();
+            });
+        </script>
     </div>
 </div>
 

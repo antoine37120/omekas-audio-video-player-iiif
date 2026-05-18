@@ -48,11 +48,17 @@ $media = $this->media;
         $annotationPropertiesToDisplay = $this->setting('audioplayer_annotation_properties_to_display', 'time,text,creator.id');
         $colors = $this->setting('audioplayer_colors', '');
         $playbackRates = $this->setting('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]');
+        $playerHeight = $this->setting('audioplayer_player_height', '');
         $canAddAnnotation = $this->identity() ? 'true' : 'false';
         // URL de la page embed (cette page elle-même)
         $embedUrl = $this->url('site/audio-player/embed', ['site-slug' => $siteSlug, 'id' => $media->item()->id()], ['force_canonical' => true]);
         $mediaUrl = $this->mediaUrl ?? ($media ? $media->originalUrl() : '');
         ?>
+    <div <?php echo $playerHeight ? 'style="height: ' . $this->escapeHtml($playerHeight) . ';overflow-y: auto"' : ''; ?>>
+        <?php $helpText = $this->setting('audioplayer_help_text', ''); ?>
+        <?php if ($helpText): ?>
+        <div id="audio-player-help-text" style="display:none;"><?php echo $helpText; ?></div>
+        <?php endif; ?>
         <annotation-player-iiif
             api-base-url="<?php echo $this->escapeHtml($apiBaseUrl); ?>"
             resource-id="<?php echo $this->escapeHtml($media->id()); ?>"
@@ -71,10 +77,13 @@ $media = $this->media;
             permissions-map="add:create,edit:edit,delete:delete"
             share-iframe-url="<?php echo $this->escapeHtml($embedUrl); ?>"
             playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
+            <?php echo $playerHeight ? 'player-height="' . $this->escapeHtml($playerHeight) . '"' : ''; ?>
             <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
             subtitle-files-url='<?php echo $this->escapeHtml($subtitlesJson); ?>'
+            <?php echo $helpText ? 'help-selector="#audio-player-help-text"' : ''; ?>
         ></annotation-player-iiif>
-        <script type="module" src="<?php echo $this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.js', 'AudioPlayer'); ?>"></script>
+    </div>
+     <script type="module" src="<?php echo $this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.js', 'AudioPlayer'); ?>"></script>
     <?php elseif ($this->isDebug && !empty($this->reasons)): ?>
         <div style="padding: 20px; color: #856404; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px;">
             <p><strong>AudioPlayer Debug (Embed):</strong></p>

@@ -26,10 +26,12 @@ class Module extends AbstractModule
             'waveform_url_pattern' => $settings->get('audioplayer_waveform_url_pattern', ''),
             'subtitles_url_pattern' => $settings->get('audioplayer_subtitles_url_pattern', ''),
             'format_property' => $settings->get('audioplayer_format_property', 'dcterms:format'),
-            'cote_property' => $settings->get('audioplayer_cote_property', 'crem:cote'),
+            'id_property' => $settings->get('audioplayer_id_property', 'crem:cote'),
+            'player_height' => $settings->get('audioplayer_player_height', ''),
             'debug_display' => $settings->get('audioplayer_debug_display', false),
             'colors' => $settings->get('audioplayer_colors', ''),
             'playback_rates' => $settings->get('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]'),
+            'help_text' => $settings->get('audioplayer_help_text', '<h3>Help</h3><ul><li>Double-click on the timeline to create a new annotation.</li><li>Drag items to move them.</li><li>Drag edges of items to resize them.</li><li>Click an item to seek the audio.</li></ul>'),
         ];
         return $renderer->partial('audio-player/admin/config-form', $data);
     }
@@ -46,10 +48,12 @@ class Module extends AbstractModule
         $settings->set('audioplayer_waveform_url_pattern', $params['waveform_url_pattern']);
         $settings->set('audioplayer_subtitles_url_pattern', $params['subtitles_url_pattern']);
         $settings->set('audioplayer_format_property', $params['format_property']);
-        $settings->set('audioplayer_cote_property', $params['cote_property']);
+        $settings->set('audioplayer_id_property', $params['id_property']);
+        $settings->set('audioplayer_player_height', $params['player_height'] ?? '');
         $settings->set('audioplayer_debug_display', (bool) ($params['debug_display'] ?? false));
         $settings->set('audioplayer_colors', $params['colors'] ?? '');
         $settings->set('audioplayer_playback_rates', $params['playback_rates'] ?? '[0.5, 1, 1.5, 2, 4]');
+        $settings->set('audioplayer_help_text', $params['help_text'] ?? '');
     }
 
     public function onBootstrap(MvcEvent $event)

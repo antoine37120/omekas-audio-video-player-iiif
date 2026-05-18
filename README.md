@@ -24,6 +24,7 @@ Module Omeka S pour la lecture audio et vidéo enrichie avec support des annotat
 Le module propose plusieurs options de configuration dans l'administration (Modules > AudioPlayer > Config) :
 
 - **Couleurs et Style** : Personnalisation de la couleur et de l'épaisseur de la forme d'onde, ainsi que des couleurs du lecteur.
+- **Texte d'aide (HTML)** : Un champ avec éditeur WYSIWYG (CKEditor) permet de modifier le message d'aide affiché dans le lecteur (par défaut : instructions sur les annotations).
 - **Vitesse de lecture** : Configuration des taux de lecture disponibles (ex: `[0.5, 1, 1.5, 2, 4]`).
 - **Patterns d'URL** : Définition des modèles d'URL pour récupérer dynamiquement :
     - Les fichiers médias (audio/vidéo)
@@ -59,6 +60,23 @@ Pour afficher le lecteur sur vos pages de ressources :
 3. Modifiez la page de ressource souhaitée (Items ou Media).
 4. Ajoutez le bloc **"Lecteur Audio/Vidéo module custom"**.
 5. Le lecteur s'affichera automatiquement si le média correspond aux critères de format définis (audio/video).
+
+### Utilisation dans les thèmes (View Helpers)
+
+Le module fournit des View Helpers pour intégrer le lecteur directement dans les templates de votre thème PHP (`.phtml`).
+
+#### 1. `audioPlayer($media)`
+Affiche le lecteur pour un objet média spécifique (`MediaRepresentation`).
+```php
+<?php echo $this->audioPlayer($media); ?>
+```
+
+#### 2. `audioPlayerForItem($itemId)`
+Affiche le lecteur pour le média principal d'un item à partir de son identifiant Omeka S.
+```php
+<?php echo $this->audioPlayerForItem(123); ?>
+```
+*Note : Si l'item n'est pas trouvé, s'il n'a pas de média principal ou si le média est incompatible, le helper retourne une chaîne vide.*
 
 ### Interface d'Administration des Annotations
 

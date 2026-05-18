@@ -40,7 +40,10 @@ $annotationMinTimeToDisplay = $this->setting('audioplayer_annotation_min_time_to
 $annotationPropertiesToDisplay = $this->setting('audioplayer_annotation_properties_to_display', 'time,text,creator.id');
 $colors = $this->setting('audioplayer_colors', '');
 $playbackRates = $this->setting('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]');
+$playerHeight = $this->setting('audioplayer_player_height', '');
 $canAddAnnotation = $this->identity() ? 'true' : 'false';
+
+$randomIdIndex = rand(1, 1000);
 
 // Génération de l'URL pour l'embed (utilisée pour l'iframe)
 $embedUrl = $this->url(
@@ -63,7 +66,11 @@ $embedUrl = $this->url(
     }
 </style>
 
-<div id="player-container">
+<div id="player-container-<?php echo $randomIdIndex; ?>" <?php echo $playerHeight ? 'style="height: ' . $this->escapeHtml($playerHeight) . ';overflow-y: auto"' : ''; ?>>
+    <?php $helpText = $this->setting('audioplayer_help_text', ''); ?>
+    <?php if ($helpText): ?>
+    <div id="audio-player-help-text-<?php echo $randomIdIndex; ?>" style="display:none;"><?php echo $helpText; ?></div>
+    <?php endif; ?>
     <annotation-player-iiif
         api-base-url="<?php echo $this->escapeHtml($apiBaseUrl); ?>"
         resource-id="<?php echo $this->escapeHtml($resourceId); ?>"
@@ -79,25 +86,17 @@ $embedUrl = $this->url(
         can-edit-all-annotation="false"
         iiif-permissions-path="omeka:permissions"
         permissions-map="add:create,edit:edit,delete:delete"
-        permission-error-selector="#perm-error-msg"
+        permission-error-selector="#perm-error-msg-<?php echo $randomIdIndex; ?>"
         share-iframe-url="<?php echo $this->escapeHtml($embedUrl); ?>"
         playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
         <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
         subtitle-files-url='<?php echo $this->escapeHtml($subtitlesJson); ?>'
+        <?php echo $helpText ? 'help-selector="#audio-player-help-text-'.$randomIdIndex.'"' : ''; ?>
     ></annotation-player-iiif>
 </div>
 <!-- Message d'erreur personnalisé pour les permissions -->
-<div id="perm-error-msg" style="display: none;">
+<div id="perm-error-msg-<?php echo $randomIdIndex; ?>" style="display: none;">
     <p style="margin: 0;"><strong>Accès refusé !</strong> Vous ne possédez pas les droits nécessaires pour effectuer cette action sur cette annotation.</p>
-</div>
-<div style="margin-top: 20px; color: #666;">
-    <p><strong>Instructions:</strong></p>
-    <ul>
-        <li>Double-click on the timeline to create a new annotation.</li>
-        <li>Drag items to move them.</li>
-        <li>Drag edges of items to resize them.</li>
-        <li>Click an item to seek the audio.</li>
-    </ul>
 </div>
 
 <?php endif; ?>

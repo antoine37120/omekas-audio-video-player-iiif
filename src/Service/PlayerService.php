@@ -51,10 +51,10 @@ class PlayerService
     {
         $reasons = [];
         $formatProperty = $this->settings->get('audioplayer_format_property', 'dcterms:format');
-        $coteProperty = $this->settings->get('audioplayer_cote_property', 'crem:cote');
+        $idProperty = $this->settings->get('audioplayer_id_property', 'crem:cote');
 
         $formats = $resource->value($formatProperty, ['all' => true]);
-        $cote = $resource->value($coteProperty);
+        $idPropertyValue = $resource->value($idProperty);
 
         $allowedFormats = ['audio', 'video', 'vidéo', 'sound', 'moving image'];
 
@@ -81,8 +81,8 @@ class PlayerService
             }
         }
 
-        if (empty($cote)) {
-            $reasons[] = sprintf('La propriété de cote (%s) est manquante ou vide.', $coteProperty);
+        if (empty($idPropertyValue)) {
+            $reasons[] = sprintf('La propriété d\'ID (%s) est manquante ou vide.', $idProperty);
         }
 
         return $reasons;

@@ -25,6 +25,7 @@ return [
     'view_helpers' => [
         'factories' => [
             'audioPlayer' => View\Helper\AudioPlayerFactory::class,
+            'audioPlayerForItem' => View\Helper\AudioPlayerForItemFactory::class,
         ],
     ],
     'resource_page_block_layouts' => [
@@ -140,9 +141,9 @@ return [
         ],
     ],
     'navigation' => [
-        'AdminGlobal' => [
+        'AdminModule' => [
             [
-                'label' => 'Audio Player Annotations',
+                'label' => 'Annotations',
                 'route' => 'admin/audio-player',
                 'resource' => Controller\Admin\AnnotationController::class,
             ],
