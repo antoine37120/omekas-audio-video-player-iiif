@@ -89,6 +89,57 @@ class PlayerService
     }
 
     /**
+     * Get the resource code from the configured ID property.
+     *
+     * @param AbstractResourceEntityRepresentation $resource
+     * @return string
+     */
+    private function getResourceCode(AbstractResourceEntityRepresentation $resource): string
+    {
+        $idProperty = $this->settings->get('audioplayer_id_property', 'crem:cote');
+        $value = $resource->value($idProperty);
+        return $value ? (string) $value : '';
+    }
+
+    /**
+     * Generate a signed HMAC token for MMS media access.
+     *
+     * @param string $code The item code (crem:cote)
+     * @return string|null The token string or null if secret is not configured
+     */
+    public function generateToken(string $code): ?string
+    {
+        $secret = $this->settings->get('audioplayer_mms_shared_secret', '');
+        if (empty($secret)) {
+            return null;
+        }
+        $payload = json_encode([
+            'app' => 'omekas',
+            'code' => $code,
+            'exp' => time() + 3600,
+        ]);
+        $payloadBase64 = base64_encode($payload);
+        $signature = hash_hmac('sha256', $payloadBase64, $secret);
+        return $payloadBase64 . '.' . $signature;
+    }
+
+    /**
+     * Append a token parameter to a URL.
+     *
+     * @param string $url
+     * @param string|null $token
+     * @return string
+     */
+    private function appendToken(string $url, ?string $token): string
+    {
+        if ($token === null) {
+            return $url;
+        }
+        $separator = str_contains($url, '?') ? '&' : '?';
+        return $url . $separator . 'token=' . urlencode($token);
+    }
+
+    /**
      * Get the media URL based on base URL and crem:cote
      *
      * @param AbstractResourceEntityRepresentation $resource
@@ -99,11 +150,13 @@ class PlayerService
         $pattern = $this->settings->get('audioplayer_media_url_pattern', '');
 
         if (empty($pattern)) {
-            // Fallback to original URL if config is missing
-            return method_exists($resource, 'originalUrl') ? $resource->originalUrl() : '';
+            $url = method_exists($resource, 'originalUrl') ? $resource->originalUrl() : '';
+        } else {
+            $url = $this->replaceTokens($pattern, $resource);
         }
 
-        return $this->replaceTokens($pattern, $resource);
+        $code = $this->getResourceCode($resource);
+        return $this->appendToken($url, $this->generateToken($code));
     }
 
     /**
@@ -117,11 +170,13 @@ class PlayerService
         $pattern = $this->settings->get('audioplayer_waveform_url_pattern', '');
 
         if (empty($pattern)) {
-            // Fallback to media URL + /waveform.json if no pattern
+            // Fallback to media URL (already tokenized) + /waveform.json
             return rtrim($this->getMediaUrl($resource), '/') . '/waveform.json';
         }
 
-        return $this->replaceTokens($pattern, $resource);
+        $url = $this->replaceTokens($pattern, $resource);
+        $code = $this->getResourceCode($resource);
+        return $this->appendToken($url, $this->generateToken($code));
     }
 
     /**
@@ -157,13 +212,16 @@ class PlayerService
                 return '[]';
             }
 
+            $code = $this->getResourceCode($resource);
+            $token = $this->generateToken($code);
+
             $subtitles = [];
             foreach ($data as $item) {
                 if (isset($item['url']) && isset($item['language_code'])) {
                     $label = !empty($item['language_label']) ? $item['language_label'] : $item['language_code'];
 
                     $subtitles[] = [
-                        'url' => $item['url'],
+                        'url' => $this->appendToken($item['url'], $token),
                         'language' => $item['language_code'],
                         'label' => $label,
                     ];

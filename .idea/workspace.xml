@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44513567-dea7-4243-b528-96b5c70a2f8d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset/css/player-iiif-dependencies.css" beforeDir="false" afterPath="$PROJECT_DIR$/asset/css/player-iiif-dependencies.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module.php" beforeDir="false" afterPath="$PROJECT_DIR$/Module.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/PlayerService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/PlayerService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/audio-player/admin/config-form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/view/audio-player/admin/config-form.phtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,10 +19,77 @@
   <component name="ComposerSettings">
     <execution />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="53" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../bin/php/php-8.3.13-nts-Win32-vs16-x64/php.exe" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000085242959047" />
+      <entry key="MS500" value="1.1266955747279217" />
+      <entry key="S2" value="4.691526325962159" />
+      <entry key="S5" value="15.54894828073256" />
+      <entry key="S10" value="30.647669625408223" />
+      <entry key="S30" value="71.51648840976637" />
+      <entry key="S60" value="112.63783020692853" />
+      <entry key="M2" value="164.3031990109166" />
+      <entry key="M5" value="228.4562752671744" />
+      <entry key="M10" value="261.2596936015731" />
+      <entry key="M15" value="274.050329482148" />
+      <entry key="M30" value="287.92697518221934" />
+      <entry key="H1" value="295.30658612872236" />
+      <entry key="H2" value="299.1131061461341" />
+      <entry key="H4" value="301.0463833986402" />
+      <entry key="D1" value="302.6729742126305" />
+      <entry key="W1" value="302.9532470422323" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9592721838016065" />
+      <entry key="MS500" value="1.117098767504937" />
+      <entry key="S2" value="4.6811743534208015" />
+      <entry key="S5" value="15.534899661037704" />
+      <entry key="S10" value="30.63331240680503" />
+      <entry key="S30" value="71.50468424661075" />
+      <entry key="S60" value="112.62801557177986" />
+      <entry key="M2" value="164.29565881398545" />
+      <entry key="M5" value="228.4519237430269" />
+      <entry key="M10" value="261.25717566637934" />
+      <entry key="M15" value="274.04856196391466" />
+      <entry key="M30" value="287.9260432279596" />
+      <entry key="H1" value="295.3061073427551" />
+      <entry key="H2" value="299.11286345055663" />
+      <entry key="H4" value="301.04626121230245" />
+      <entry key="D1" value="302.67295373066406" />
+      <entry key="W1" value="302.9532441133431" />
+    </decayedShown>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../../laragon/bin/php/php-8.3.13-nts-Win32-vs16-x64/php.exe" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -31,8 +101,12 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
@@ -49,8 +123,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-PS-252.28238.9" />
-        <option value="bundled-php-predefined-a98d8de5180a-58f58c5035b3-com.jetbrains.php.sharedIndexes-PS-252.28238.9" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PS-261.24374.185" />
+        <option value="bundled-php-predefined-a98d8de5180a-6bbb74dbab74-com.jetbrains.php.sharedIndexes-PS-261.24374.185" />
       </set>
     </attachedChunks>
   </component>
@@ -65,6 +139,8 @@
       <workItem from="1764168597056" duration="7791000" />
       <workItem from="1764688478918" duration="595000" />
       <workItem from="1764844619124" duration="595000" />
+      <workItem from="1779801525687" duration="1352000" />
+      <workItem from="1779909711855" duration="1745000" />
     </task>
     <servers />
   </component>

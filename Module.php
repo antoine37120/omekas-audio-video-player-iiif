@@ -32,6 +32,7 @@ class Module extends AbstractModule
             'colors' => $settings->get('audioplayer_colors', ''),
             'playback_rates' => $settings->get('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]'),
             'help_text' => $settings->get('audioplayer_help_text', '<h3>Help</h3><ul><li>Double-click on the timeline to create a new annotation.</li><li>Drag items to move them.</li><li>Drag edges of items to resize them.</li><li>Click an item to seek the audio.</li></ul>'),
+            'mms_shared_secret' => $settings->get('audioplayer_mms_shared_secret', ''),
         ];
         return $renderer->partial('audio-player/admin/config-form', $data);
     }
@@ -54,6 +55,7 @@ class Module extends AbstractModule
         $settings->set('audioplayer_colors', $params['colors'] ?? '');
         $settings->set('audioplayer_playback_rates', $params['playback_rates'] ?? '[0.5, 1, 1.5, 2, 4]');
         $settings->set('audioplayer_help_text', $params['help_text'] ?? '');
+        $settings->set('audioplayer_mms_shared_secret', $params['mms_shared_secret']);
     }
 
     public function onBootstrap(MvcEvent $event)

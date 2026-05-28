@@ -82,6 +82,18 @@
 
 <div class="field">
     <div class="field-meta">
+        <label for="mms_shared_secret"><?php echo $this->translate('MMS Shared Secret'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Secret key used to generate HMAC tokens for MMS media URLs. Leave empty to disable token signing.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="password" name="mms_shared_secret" id="mms_shared_secret" value="<?php echo $this->escapeHtml($mms_shared_secret); ?>" autocomplete="new-password">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
         <label for="format_property"><?php echo $this->translate('Format Property'); ?></label>
         <div class="field-description">
             <?php echo $this->translate('Property used to check the media format (e.g. dcterms:format).'); ?>
