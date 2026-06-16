@@ -46,7 +46,7 @@ class PlayerController extends AbstractActionController
             if (empty($mediaReasons)) {
                 $mediaUrl = $this->playerService->getMediaUrl($media);
                 $waveformUrl = $this->playerService->getWaveformUrl($media);
-                $subtitlesJson = $this->playerService->getSubtitlesJson($media);
+                $subtitlesListUrl = $this->playerService->getSubtitlesListUrl($media);
             } else {
                 $media = null;
             }
@@ -56,7 +56,7 @@ class PlayerController extends AbstractActionController
             'media' => $media,
             'mediaUrl' => $mediaUrl,
             'waveformUrl' => $waveformUrl,
-            'subtitlesJson' => $subtitlesJson ?? '[]',
+            'subtitlesListUrl' => $subtitlesListUrl ?? '',
             'reasons' => $reasons,
             'isDebug' => $this->playerService->isDebug(),
             'playerService' => $this->playerService,
@@ -92,7 +92,7 @@ class PlayerController extends AbstractActionController
             if (empty($mediaReasons)) {
                 $mediaUrl = $this->playerService->getMediaUrl($media);
                 $waveformUrl = $this->playerService->getWaveformUrl($media);
-                $subtitlesJson = $this->playerService->getSubtitlesJson($media);
+                $subtitlesListUrl = $this->playerService->getSubtitlesListUrl($media);
             } else {
                 $media = null;
             }
@@ -102,7 +102,7 @@ class PlayerController extends AbstractActionController
             'media' => $media,
             'mediaUrl' => $mediaUrl,
             'waveformUrl' => $waveformUrl,
-            'subtitlesJson' => $subtitlesJson ?? '[]',
+            'subtitlesListUrl' => $subtitlesListUrl ?? '',
             'reasons' => $reasons,
             'isDebug' => $this->playerService->isDebug(),
             'playerService' => $this->playerService,

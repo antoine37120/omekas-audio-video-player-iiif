@@ -114,7 +114,7 @@ class PlayerService
             return null;
         }
         $payload = json_encode([
-            'app' => 'omekas',
+            'app' => $this->settings->get('audioplayer_mms_app_id', 'omekas'),
             'code' => $code,
             'exp' => time() + 3600,
         ]);
@@ -178,6 +178,31 @@ class PlayerService
         $code = $this->getResourceCode($resource);
         return $this->appendToken($url, $this->generateToken($code));
     }
+
+    /**
+     * Get the subtitles list URL (API endpoint) with token.
+     * Le composant JS fetchera cette URL pour obtenir la liste des sous-titres,
+     * plutôt que de faire le fetch côté serveur comme getSubtitlesJson().
+     *
+     * @param AbstractResourceEntityRepresentation $resource
+     * @return string URL with token, or empty string if no pattern configured
+     */
+    public function getSubtitlesListUrl(AbstractResourceEntityRepresentation $resource): string
+    {
+        $pattern = $this->settings->get('audioplayer_subtitles_url_pattern', '');
+        if (empty($pattern)) {
+            return '';
+        }
+
+        $url = $this->replaceTokens($pattern, $resource);
+        if (empty($url)) {
+            return '';
+        }
+
+        $code = $this->getResourceCode($resource);
+        return $this->appendToken($url, $this->generateToken($code));
+    }
+
 
     /**
      * Get subtitles JSON from external API and transform it for the web component.

@@ -49,13 +49,13 @@ class AudioPlayerForItem extends AbstractHelper
 
         $mediaUrl = $this->playerService->getMediaUrl($media);
         $waveformUrl = $this->playerService->getWaveformUrl($media);
-        $subtitlesJson = $this->playerService->getSubtitlesJson($media);
+        $subtitlesListUrl = $this->playerService->getSubtitlesListUrl($media);
 
         return $this->getView()->partial('common/audio-video-player', [
             'media' => $media,
             'mediaUrl' => $mediaUrl,
             'waveformUrl' => $waveformUrl,
-            'subtitlesJson' => $subtitlesJson,
+            'subtitlesListUrl' => $subtitlesListUrl,
             'playerService' => $this->playerService,
         ]);
     }

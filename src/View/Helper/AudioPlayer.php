@@ -37,7 +37,7 @@ class AudioPlayer extends AbstractHelper
                 'media' => $media,
                 'mediaUrl' => $this->playerService->getMediaUrl($media),
                 'waveformUrl' => $this->playerService->getWaveformUrl($media),
-                'subtitlesJson' => $this->playerService->getSubtitlesJson($media),
+                'subtitlesListUrl' => $this->playerService->getSubtitlesListUrl($media),
                 'playerService' => $this->playerService,
             ]);
         }

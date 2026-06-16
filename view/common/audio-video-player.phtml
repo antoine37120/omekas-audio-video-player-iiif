@@ -27,7 +27,7 @@ $this->headScript()->appendFile(
     $mediaId = $media ? $media->id() : '';
     $mediaUrl = $mediaUrl ?? ($media ? $media->originalUrl() : '');
     $waveformUrl = $waveformUrl ?? (isset($mediaUrl) ? rtrim($mediaUrl, '/') . '/waveform.json' : '');
-    $subtitlesJson = $subtitlesJson ?? '[]';
+    $subtitlesListUrl = $subtitlesListUrl ?? '';
     // Génération de l'URL vers l'action IIIF du contrôleur Site
     $iiifUrl = $this->url(
             'site/audio-player/annotation-iiif',
@@ -90,7 +90,10 @@ $embedUrl = $this->url(
         share-iframe-url="<?php echo $this->escapeHtml($embedUrl); ?>"
         playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
         <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
-        subtitle-files-url='<?php echo $this->escapeHtml($subtitlesJson); ?>'
+        <?php if ($subtitlesListUrl): ?>
+        subtitle-list-url="<?php echo $this->escapeHtml($subtitlesListUrl); ?>"
+        subtitle-field-mapping='<?php echo $this->escapeHtml($this->setting('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}')); ?>'
+        <?php endif; ?>
         <?php echo $helpText ? 'help-selector="#audio-player-help-text-'.$randomIdIndex.'"' : ''; ?>
     ></annotation-player-iiif>
 </div>

@@ -33,6 +33,8 @@ class Module extends AbstractModule
             'playback_rates' => $settings->get('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]'),
             'help_text' => $settings->get('audioplayer_help_text', '<h3>Help</h3><ul><li>Double-click on the timeline to create a new annotation.</li><li>Drag items to move them.</li><li>Drag edges of items to resize them.</li><li>Click an item to seek the audio.</li></ul>'),
             'mms_shared_secret' => $settings->get('audioplayer_mms_shared_secret', ''),
+            'mms_app_id' => $settings->get('audioplayer_mms_app_id', 'omekas'),
+            'subtitle_field_mapping' => $settings->get('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}'),
         ];
         return $renderer->partial('audio-player/admin/config-form', $data);
     }
@@ -56,6 +58,8 @@ class Module extends AbstractModule
         $settings->set('audioplayer_playback_rates', $params['playback_rates'] ?? '[0.5, 1, 1.5, 2, 4]');
         $settings->set('audioplayer_help_text', $params['help_text'] ?? '');
         $settings->set('audioplayer_mms_shared_secret', $params['mms_shared_secret']);
+        $settings->set('audioplayer_mms_app_id', $params['mms_app_id']);
+        $settings->set('audioplayer_subtitle_field_mapping', $params['subtitle_field_mapping'] ?? '{"url":"url","language":"language_code","label":"language_label"}');
     }
 
     public function onBootstrap(MvcEvent $event)

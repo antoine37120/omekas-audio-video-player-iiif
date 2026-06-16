@@ -82,6 +82,18 @@
 
 <div class="field">
     <div class="field-meta">
+        <label for="subtitle_field_mapping"><?php echo $this->translate('Subtitle Field Mapping (JSON)'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('JSON mapping of fields returned by the subtitles API to the expected keys (url, language_code, language_label).'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <textarea name="subtitle_field_mapping" id="subtitle_field_mapping" rows="3" style="width: 100%; font-family: monospace;"><?php echo $this->escapeHtml($subtitle_field_mapping); ?></textarea>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
         <label for="mms_shared_secret"><?php echo $this->translate('MMS Shared Secret'); ?></label>
         <div class="field-description">
             <?php echo $this->translate('Secret key used to generate HMAC tokens for MMS media URLs. Leave empty to disable token signing.'); ?>
@@ -89,6 +101,18 @@
     </div>
     <div class="inputs">
         <input type="password" name="mms_shared_secret" id="mms_shared_secret" value="<?php echo $this->escapeHtml($mms_shared_secret); ?>" autocomplete="new-password">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="mms_app_id"><?php echo $this->translate('MMS App ID'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Application ID used in the HMAC token payload for MMS media URLs.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="mms_app_id" id="mms_app_id" value="<?php echo $this->escapeHtml($mms_app_id); ?>">
     </div>
 </div>
 

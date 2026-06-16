@@ -40,7 +40,7 @@ $media = $this->media;
 
         $mediaUrl = $this->mediaUrl;
         $waveformUrl = $this->waveformUrl;
-        $subtitlesJson = $this->subtitlesJson ?? '[]';
+        $subtitlesListUrl = $this->subtitlesListUrl ?? '';
         
         $waveformStrokeColor = $this->setting('audioplayer_waveform_stroke_color', 'rgba(0, 0, 0, 0.18)');
         $waveformStrokeWidth = $this->setting('audioplayer_waveform_stroke_width', '1');
@@ -79,7 +79,10 @@ $media = $this->media;
             playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
             <?php echo $playerHeight ? 'player-height="' . $this->escapeHtml($playerHeight) . '"' : ''; ?>
             <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
-            subtitle-files-url='<?php echo $this->escapeHtml($subtitlesJson); ?>'
+            <?php if ($subtitlesListUrl): ?>
+            subtitle-list-url="<?php echo $this->escapeHtml($subtitlesListUrl); ?>"
+            subtitle-field-mapping='<?php echo $this->escapeHtml($this->setting('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}')); ?>'
+            <?php endif; ?>
             <?php echo $helpText ? 'help-selector="#audio-player-help-text"' : ''; ?>
         ></annotation-player-iiif>
     </div>
