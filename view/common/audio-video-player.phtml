@@ -40,7 +40,9 @@ $annotationMinTimeToDisplay = $this->setting('audioplayer_annotation_min_time_to
 $annotationPropertiesToDisplay = $this->setting('audioplayer_annotation_properties_to_display', 'time,text,creator.id');
 $colors = $this->setting('audioplayer_colors', '');
 $playbackRates = $this->setting('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]');
-$playerHeight = $this->setting('audioplayer_player_height', '');
+$heightAudio = $this->setting('audioplayer_height_audio', '250');
+$heightVideo = $this->setting('audioplayer_height_video', '450');
+$heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
 $canAddAnnotation = $this->identity() ? 'true' : 'false';
 
 $randomIdIndex = rand(1, 1000);
@@ -66,8 +68,8 @@ $embedUrl = $this->url(
     }
 </style>
 
-<div id="player-container-<?php echo $randomIdIndex; ?>" <?php echo $playerHeight ? 'style="height: ' . $this->escapeHtml($playerHeight) . ';overflow-y: auto"' : ''; ?>>
-    <?php $helpText = $this->setting('audioplayer_help_text', ''); ?>
+<div id="player-container-<?php echo $randomIdIndex; ?>">
+    <?php $helpText = $this->siteSetting('audioplayer_help_text') ?: $this->setting('audioplayer_help_text', '<h3>Help</h3><ul><li>Double-click on the timeline to create a new annotation.</li><li>Drag items to move them.</li><li>Drag edges of items to resize them.</li><li>Click an item to seek the audio.</li></ul>'); ?>
     <?php if ($helpText): ?>
     <div id="audio-player-help-text-<?php echo $randomIdIndex; ?>" style="display:none;"><?php echo $helpText; ?></div>
     <?php endif; ?>
@@ -89,6 +91,9 @@ $embedUrl = $this->url(
         permission-error-selector="#perm-error-msg-<?php echo $randomIdIndex; ?>"
         share-iframe-url="<?php echo $this->escapeHtml($embedUrl); ?>"
         playback-rates="<?php echo $this->escapeHtml($playbackRates); ?>"
+        height-audio="<?php echo $this->escapeHtml($heightAudio); ?>"
+        height-video="<?php echo $this->escapeHtml($heightVideo); ?>"
+        height-annotations="<?php echo $this->escapeHtml($heightAnnotations); ?>"
         <?php echo $colors ? 'colors=\'' . $this->escapeHtml($colors) . '\'' : ''; ?>
         <?php if ($subtitlesListUrl): ?>
         subtitle-list-url="<?php echo $this->escapeHtml($subtitlesListUrl); ?>"

@@ -22,6 +22,9 @@ return [
             Service\AnnotationService::class => Service\AnnotationServiceFactory::class,
         ],
     ],
+    'site_settings' => [
+        'audioplayer_help_text' => '',
+    ],
     'view_helpers' => [
         'factories' => [
             'audioPlayer' => View\Helper\AudioPlayerFactory::class,

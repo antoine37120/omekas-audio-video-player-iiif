@@ -36,12 +36,16 @@ class AnnotationService
         $publicId = $data['public_id'] ?? bin2hex(random_bytes(16));
         $description = $data['description'] ?? $data['text'] ?? '';
 
+        // Le JS envoie 'end_time' pour les ranges, rien pour les points
+        // Fallback : time_end = time (point = pas de fin distincte)
+        $endTime = $data['end_time'] ?? $data['time_end'] ?? $data['time'];
+
         $sql = 'INSERT INTO media_markers (resource_id, public_id, time, time_end, title, date, description, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         $params = [
             $data['resource_id'],
             $publicId,
             $data['time'],
-            $data['end_time'],
+            $endTime,
             $data['title'],
             $data['date'] ?? null,
             $description,
@@ -63,8 +67,11 @@ class AnnotationService
     public function update($id, array $data)
     {
         $sets = [];
-        if (isset ($data['end_time'])) {
-            $data  ['time_end'] = $data['end_time'];
+        if (isset($data['end_time'])) {
+            $data['time_end'] = $data['end_time'];
+        } elseif (!isset($data['time_end'])) {
+            // Point : pas de fin fournie → time_end = time
+            $data['time_end'] = $data['time'];
         }
         $params = [];
         foreach ($data as $key => $value) {

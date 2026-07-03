@@ -36,11 +36,31 @@
 
 <div class="field">
     <div class="field-meta">
-        <label for="player_height">Player Height</label>
-        <div class="field-description">Height of the player in pixels (e.g. "400px" or "auto"). Leave empty for default.</div>
+        <label for="height_audio"><?php echo $this->translate('Audio Height (px)'); ?></label>
+        <div class="field-description"><?php echo $this->translate('Total player height for audio media without annotations.'); ?></div>
     </div>
     <div class="inputs">
-        <input type="text" name="player_height" id="player_height" value="<?php echo $this->escapeHtml($player_height); ?>">
+        <input type="number" name="height_audio" id="height_audio" value="<?php echo $this->escapeHtml($height_audio); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="height_video"><?php echo $this->translate('Video Height (px)'); ?></label>
+        <div class="field-description"><?php echo $this->translate('Total player height for video media without annotations.'); ?></div>
+    </div>
+    <div class="inputs">
+        <input type="number" name="height_video" id="height_video" value="<?php echo $this->escapeHtml($height_video); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="height_annotations"><?php echo $this->translate('Annotation List Height (px)'); ?></label>
+        <div class="field-description"><?php echo $this->translate('Extra height added to the container when at least one annotation exists.'); ?></div>
+    </div>
+    <div class="inputs">
+        <input type="number" name="height_annotations" id="height_annotations" value="<?php echo $this->escapeHtml($height_annotations); ?>">
     </div>
 </div>
 

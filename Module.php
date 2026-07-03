@@ -27,7 +27,9 @@ class Module extends AbstractModule
             'subtitles_url_pattern' => $settings->get('audioplayer_subtitles_url_pattern', ''),
             'format_property' => $settings->get('audioplayer_format_property', 'dcterms:format'),
             'id_property' => $settings->get('audioplayer_id_property', 'crem:cote'),
-            'player_height' => $settings->get('audioplayer_player_height', ''),
+            'height_audio' => $settings->get('audioplayer_height_audio', '250'),
+            'height_video' => $settings->get('audioplayer_height_video', '450'),
+            'height_annotations' => $settings->get('audioplayer_height_annotations', '150'),
             'debug_display' => $settings->get('audioplayer_debug_display', false),
             'colors' => $settings->get('audioplayer_colors', ''),
             'playback_rates' => $settings->get('audioplayer_playback_rates', '[0.5, 1, 1.5, 2, 4]'),
@@ -52,7 +54,9 @@ class Module extends AbstractModule
         $settings->set('audioplayer_subtitles_url_pattern', $params['subtitles_url_pattern']);
         $settings->set('audioplayer_format_property', $params['format_property']);
         $settings->set('audioplayer_id_property', $params['id_property']);
-        $settings->set('audioplayer_player_height', $params['player_height'] ?? '');
+        $settings->set('audioplayer_height_audio', $params['height_audio'] ?? '250');
+        $settings->set('audioplayer_height_video', $params['height_video'] ?? '450');
+        $settings->set('audioplayer_height_annotations', $params['height_annotations'] ?? '150');
         $settings->set('audioplayer_debug_display', (bool) ($params['debug_display'] ?? false));
         $settings->set('audioplayer_colors', $params['colors'] ?? '');
         $settings->set('audioplayer_playback_rates', $params['playback_rates'] ?? '[0.5, 1, 1.5, 2, 4]');
@@ -68,6 +72,70 @@ class Module extends AbstractModule
 
         // Ajouter les règles ACL pour permettre l'accès public au contrôleur API
         $this->addAclRules();
+
+        $serviceManager = $event->getApplication()->getServiceManager();
+        $sharedEventManager = $serviceManager->get('SharedEventManager');
+
+        // Add the help_text field to the site settings form
+        $sharedEventManager->attach(
+            \Omeka\Form\SiteSettingsForm::class,
+            'form.add_elements',
+            function ($event) {
+                $form = $event->getTarget();
+                $form->add([
+                    'name' => 'audioplayer_help_text',
+                    'type' => \Laminas\Form\Element\Textarea::class,
+                    'options' => [
+                        'element_group' => 'general',
+                        'label' => 'Help text on audio player IIIF (HTML)', // @translate
+                        'info' => 'HTML content displayed in the help popup of the audio/video player.', // @translate
+                    ],
+                    'attributes' => [
+                        'id' => 'audioplayer_help_text',
+                        'class' => 'wysiwyg',
+                        'rows' => 6,
+                    ],
+                ]);
+            }
+        );
+
+        // Add input filter for the help_text field
+        $sharedEventManager->attach(
+            \Omeka\Form\SiteSettingsForm::class,
+            'form.add_input_filters',
+            function ($event) {
+                $inputFilter = $event->getParam('inputFilter');
+                $inputFilter->add([
+                    'name' => 'audioplayer_help_text',
+                    'required' => false,
+                    'allow_empty' => true,
+                ]);
+            }
+        );
+
+        // Load CKEditor and custom JS on the site edit page
+        $eventManager = $event->getApplication()->getEventManager();
+        $eventManager->attach('render', function (MvcEvent $e) {
+            $routeMatch = $e->getRouteMatch();
+            if (!$routeMatch) {
+                return;
+            }
+            $isSiteAdmin = $routeMatch->getParam('__SITEADMIN__');
+            $action = $routeMatch->getParam('action');
+            if ($isSiteAdmin && $action === 'edit') {
+                $services = $e->getApplication()->getServiceManager();
+                $viewHelperManager = $services->get('ViewHelperManager');
+                $assetUrl = $viewHelperManager->get('assetUrl');
+                $headScript = $viewHelperManager->get('headScript');
+
+                // Load CKEditor library
+                $headScript->appendFile($assetUrl('vendor/ckeditor/ckeditor.js', 'Omeka'));
+                $headScript->appendFile($assetUrl('vendor/ckeditor/adapters/jquery.js', 'Omeka'));
+
+                // Load our custom CKEditor init
+                $headScript->appendFile($assetUrl('js/admin-site-settings.js', 'AudioPlayer'));
+            }
+        });
     }
 
     /**
