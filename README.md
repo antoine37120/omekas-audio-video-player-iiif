@@ -10,7 +10,9 @@ Module Omeka S pour la lecture audio et vidéo enrichie avec support des annotat
 - **API REST** : API complète pour la gestion des annotations (CRUD) et l'export IIIF.
 - **Bloc de mise en page** : Un bloc "Lecteur Audio/Vidéo module custom" pour intégrer facilement le lecteur sur les pages de ressources (Items et Médias).
 - **Interface d'Administration** : Tableau de bord dédié pour la gestion globale des annotations.
-- **Support des sous-titres** : Intégration de sous-titres via une API externe ou des patterns d'URL.
+- **Support des sous-titres** : Chargement dynamique des sous-titres depuis une API externe retournant un JSON (`url`, `language_code`), avec mapping configurable des champs de l'API. Un pattern d'URL peut aussi être utilisé directement.
+- **Sécurisation des médias (HMAC)** : Signature cryptographique (HMAC) des URLs des médias, formes d'onde et sous-titres, pour contrôler l'accès à des ressources distantes (ex. MMS) via un secret partagé et un identifiant d'application.
+- **Hauteurs configurables** : Hauteur du lecteur définie séparément pour l'audio, la vidéo, et la zone d'annotations.
 - **Mode Embed** : Possibilité d'intégrer le lecteur via une iframe.
 
 ## Installation
@@ -23,14 +25,26 @@ Module Omeka S pour la lecture audio et vidéo enrichie avec support des annotat
 
 Le module propose plusieurs options de configuration dans l'administration (Modules > AudioPlayer > Config) :
 
-- **Couleurs et Style** : Personnalisation de la couleur et de l'épaisseur de la forme d'onde, ainsi que des couleurs du lecteur.
-- **Texte d'aide (HTML)** : Un champ avec éditeur WYSIWYG (CKEditor) permet de modifier le message d'aide affiché dans le lecteur (par défaut : instructions sur les annotations).
+- **Couleurs et Style** : Personnalisation de la couleur (`waveform_stroke_color`) et de l'épaisseur (`waveform_stroke_width`) de la forme d'onde, ainsi que des couleurs du lecteur (objet JSON `colors`).
+- **Hauteurs du lecteur** : Trois hauteurs indépendantes peuvent être définies :
+    - `height_audio` (défaut : `250`) — hauteur du lecteur pour les médias audio sans annotation.
+    - `height_video` (défaut : `450`) — hauteur du lecteur pour les médias vidéo sans annotation.
+    - `height_annotations` (défaut : `150`) — hauteur supplémentaire ajoutée au conteneur lorsqu'au moins une annotation est présente.
+- **Texte d'aide (HTML)** : Un champ avec éditeur WYSIWYG (CKEditor) permet de modifier le message d'aide affiché dans le lecteur (par défaut : instructions sur les annotations). Ce texte peut être défini à deux niveaux :
+    - **Niveau site** (prioritaire) : champ *"Help text on audio player IIIF (HTML)"* présent dans les **Paramètres du site**, ce qui permet un message différent par site.
+    - **Niveau global** : champ `help_text` de la configuration du module, utilisé comme repli si aucun texte n'est défini au niveau du site.
 - **Vitesse de lecture** : Configuration des taux de lecture disponibles (ex: `[0.5, 1, 1.5, 2, 4]`).
 - **Patterns d'URL** : Définition des modèles d'URL pour récupérer dynamiquement :
-    - Les fichiers médias (audio/vidéo)
-    - Les fichiers de forme d'onde (waveform JSON)
-    - Les fichiers de sous-titres (JSON)
-- **Propriétés de métadonnées** : Configuration des termes de propriétés utilisés pour identifier le format (ex: `dcterms:format`) et la cote (ex: `crem:cote`).
+    - Les fichiers médias (audio/vidéo) — `media_url_pattern`
+    - Les fichiers de forme d'onde (waveform JSON) — `waveform_url_pattern`
+    - Les fichiers de sous-titres (API JSON) — `subtitles_url_pattern`
+    
+    Les patterns utilisent des jetons (ex. `{bibo:locator}`) pour injecter des valeurs issues des métadonnées.
+- **Mapping des sous-titres** : Objet JSON (`subtitle_field_mapping`) mettant en correspondance les champs retournés par l'API de sous-titres avec les clés attendues (`url`, `language_code`, `language_label`).
+- **Sécurité MMS (signature HMAC)** : Lorsque les médias sont servis par un système tiers (ex. MMS), les URLs peuvent être signées automatiquement :
+    - `mms_shared_secret` — clé secrète utilisée pour générer le jeton HMAC. Laisser vide pour désactiver la signature.
+    - `mms_app_id` — identifiant d'application inclus dans la charge utile du jeton (défaut : `omekas`).
+- **Propriétés de métadonnées** : Configuration des termes de propriétés utilisés pour identifier le format (`format_property`, ex: `dcterms:format`) et la cote (`id_property`, ex: `crem:cote`).
 - **Mode Debug** : Option pour afficher les raisons d'incompatibilité d'un média directement dans l'interface.
 
 ## Structure de la base de données
@@ -115,6 +129,8 @@ Base URL : `/api/audio-player/annotation` (similaire à l'API site mais sans con
 }
 ```
 
+> **Annotation « point »** : pour créer une annotation sur un instant précis (et non une plage), `time_end` peut être omis. Le module reprend alors automatiquement la valeur de `time` comme temps de fin.
+
 Pour plus de détails techniques sur IIIF, consultez [IIIF_ANNOTATIONS.md](IIIF_ANNOTATIONS.md). Pour des exemples d'utilisation en JavaScript, consultez [API_USAGE.md](API_USAGE.md).
 
 ## Structure du code
@@ -155,9 +171,27 @@ Le lecteur est basé sur un composant web personnalisé. Les assets se trouvent 
 
 ## Compatibilité
 
-- Omeka 4.x
+- Module version : **1.2.3**
+- Omeka 4.x (`^4.0.0`)
 - PHP 8.3 ou supérieur
 - Navigateurs modernes (support des Web Components)
+
+## Notes de version
+
+### v1.2.3 (2026-07-03)
+- Hauteurs de lecteur séparées : `height_audio`, `height_video` et `height_annotations` remplacent l'ancien réglage `player_height` unique.
+- Texte d'aide configurable au niveau du site (`audioplayer_help_text` dans les *Paramètres du site*), avec CKEditor et repli sur le réglage global.
+- Correctif des annotations « point » : `time_end` reprend `time` en cas d'absence (à la création comme à la mise à jour).
+
+### v1.2.2 (2026-06-16)
+- Chargement des sous-titres depuis une API externe via `subtitles_url_pattern` (réponse JSON `url` / `language_code`).
+- Mapping configurable des champs de l'API de sous-titres (`subtitle_field_mapping`).
+
+### v1.2.0 – v1.2.1 (2026-06-10)
+- Correctifs et améliorations du web component (`player-iiif-vis.js`).
+
+### v1.1.0 (2026-05-28)
+- Signature HMAC des URLs média (et forme d'onde / sous-titres) via `mms_shared_secret` et `mms_app_id`, pour sécuriser l'accès aux ressources distantes (ex. MMS).
 
 ## Licence
 
