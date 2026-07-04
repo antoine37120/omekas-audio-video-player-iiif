@@ -159,6 +159,7 @@ class AnnotationController extends AbstractActionController
         }
         $user = $this->identity();
         $data['author_id'] = $user->getId() ;
+        $data['date'] = (new \DateTime())->format('Y-m-d H:i:s');
         $id = $this->service->create($data);
         
         // Fetch created annotation to return it in IIIF format
@@ -203,6 +204,7 @@ class AnnotationController extends AbstractActionController
             return $this->returnJson(['error' => 'Permission denied']);
         }
 
+        $data['date'] = (new \DateTime())->format('Y-m-d H:i:s');
         $success = $this->service->update($publicId, $data);
         
         // Fetch updated annotation to return it in IIIF format
