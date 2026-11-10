@@ -71,18 +71,33 @@ class PlayerController extends AbstractActionController
         $waveformUrl = '';
 
         $reasons = [];
+        $accessDenied = false;
 
         if ($id) {
-            // On considère que l'id est celui de l'item
-            $response = $this->api->read('items', $id);
-            $item = $response->getContent();
+            // On considère que l'id est celui de l'item.
+            // Un item inaccessible (privé pour cet utilisateur) est un cas
+            // d'accès refusé ; un item inexistant reste une absence.
+            try {
+                $item = $this->api->read('items', $id)->getContent();
+            } catch (\Omeka\Api\Exception\NotFoundException $e) {
+                $item = null;
+                if ($this->itemExists($id)) {
+                    $accessDenied = true;
+                } else {
+                    $reasons[] = 'Item non trouvé.';
+                }
+            }
+
             if ($item) {
                 $media = $this->playerService->getPrimaryMedia($item);
                 if (!$media) {
-                    $reasons[] = 'Aucun média principal trouvé pour cet item.';
+                    if ($this->playerService->itemHasPrimaryMediaInDatabase($item)) {
+                        // L'item est visible mais son média principal ne l'est pas.
+                        $accessDenied = true;
+                    } else {
+                        $reasons[] = 'Aucun média principal trouvé pour cet item.';
+                    }
                 }
-            } else {
-                $reasons[] = 'Item non trouvé.';
             }
         }
 
@@ -104,6 +119,7 @@ class PlayerController extends AbstractActionController
             'waveformUrl' => $waveformUrl,
             'subtitlesListUrl' => $subtitlesListUrl ?? '',
             'reasons' => $reasons,
+            'accessDenied' => $accessDenied,
             'isDebug' => $this->playerService->isDebug(),
             'playerService' => $this->playerService,
         ]);
@@ -112,5 +128,20 @@ class PlayerController extends AbstractActionController
         $view->setTerminal(true);
 
         return $view;
+    }
+
+    /**
+     * Indique si l'item existe en base, indépendamment des droits de l'utilisateur.
+     * Permet de distinguer « refusé » de « inexistant », l'API confondant les deux.
+     */    protected function itemExists($id)
+    {
+        $connection = $this->getEvent()->getApplication()
+            ->getServiceManager()
+            ->get('Omeka\Connection');
+
+        return (bool) $connection->fetchOne(
+            'SELECT 1 FROM `resource` WHERE id = ?',
+            [$id]
+        );
     }
 }

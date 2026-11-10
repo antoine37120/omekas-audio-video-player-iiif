@@ -183,6 +183,22 @@
 
 <div class="field">
     <div class="field-meta">
+        <label for="annotation_relation"><?php echo $this->translate('Annotation Relation'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Resource the annotations are attached to: the media, or the parent item. Pick the one used when the annotations were imported.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <select name="annotation_relation" id="annotation_relation">
+            <option value="media"<?php echo $annotation_relation === 'media' ? ' selected' : ''; ?>><?php echo $this->translate('Media (media_markers.resource_id = media ID)'); ?></option>
+            <option value="item"<?php echo $annotation_relation === 'item' ? ' selected' : ''; ?>><?php echo $this->translate('Item (media_markers.resource_id = item ID)'); ?></option>
+        </select>
+    </div>
+</div>
+
+
+<div class="field">
+    <div class="field-meta">
         <label for="debug_display"><?php echo $this->translate('Debug Display'); ?></label>
         <div class="field-description">
             <?php echo $this->translate('Display a message explaining why the player is not shown if conditions are not met.'); ?>
@@ -218,6 +234,23 @@
         <script type="text/javascript">
             jQuery(document).ready(function($) {
                 $('#help_text').ckeditor();
+            });
+        </script>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="access_denied_text"><?php echo $this->translate('Access Denied Text (HTML)'); ?></label>
+        <div class="field-description">
+            <?php echo $this->translate('Message displayed in the player when Omeka denies access to the annotations of a resource. The {legal_url} placeholder is replaced by the URL of the site legal notices page.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <textarea name="access_denied_text" id="access_denied_text" class="wysiwyg"><?php echo $this->escapeHtml($access_denied_text); ?></textarea>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('#access_denied_text').ckeditor();
             });
         </script>
     </div>

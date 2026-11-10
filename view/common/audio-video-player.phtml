@@ -23,15 +23,17 @@ $this->headScript()->appendFile(
     $siteSlug = $this->params()->fromRoute('site-slug');
 // L'URL de base pour le CRUD des annotations (via le contrôleur Site)
     $apiBaseUrl = $this->url('site/audio-player/annotation', ['site-slug' => $siteSlug], ['force_canonical' => true]);
-    $resourceId = $media ? $media->id() : '';
+    $resourceId = $media ? $this->playerService->getAnnotationResourceId($media) : '';
     $mediaId = $media ? $media->id() : '';
     $mediaUrl = $mediaUrl ?? ($media ? $media->originalUrl() : '');
     $waveformUrl = $waveformUrl ?? (isset($mediaUrl) ? rtrim($mediaUrl, '/') . '/waveform.json' : '');
     $subtitlesListUrl = $subtitlesListUrl ?? '';
-    // Génération de l'URL vers l'action IIIF du contrôleur Site
+    // Génération de l'URL vers l'action IIIF du contrôleur Site.
+    // L'ID porté est celui auquel les annotations sont rattachées (média ou item
+    // parent, selon le réglage), pas nécessairement l'ID du média.
     $iiifUrl = $this->url(
             'site/audio-player/annotation-iiif',
-            ['site-slug' => $siteSlug, 'id' => $mediaId],
+            ['site-slug' => $siteSlug, 'id' => $resourceId],
             ['force_canonical' => true]
     );
 $waveformStrokeColor = $this->setting('audioplayer_waveform_stroke_color', 'rgba(0, 0, 0, 0.18)');
@@ -100,8 +102,18 @@ $embedUrl = $this->url(
         subtitle-field-mapping='<?php echo $this->escapeHtml($this->setting('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}')); ?>'
         <?php endif; ?>
         <?php echo $helpText ? 'help-selector="#audio-player-help-text-'.$randomIdIndex.'"' : ''; ?>
+        access-denied-selector="#audio-player-access-denied-<?php echo $randomIdIndex; ?>"
     ></annotation-player-iiif>
 </div>
+<!-- Message affiché quand Omeka refuse l'accès aux annotations de la ressource -->
+<?php
+$accessDeniedText = $this->setting('audioplayer_access_denied_text', '');
+if ($accessDeniedText):
+    $legalUrl = $this->url('site/page', ['site-slug' => $siteSlug, 'page-slug' => 'mentions-legales']);
+    $accessDeniedText = str_replace('{legal_url}', $this->escapeHtml($legalUrl), $accessDeniedText);
+?>
+<div id="audio-player-access-denied-<?php echo $randomIdIndex; ?>" style="display: none;"><?php echo $accessDeniedText; ?></div>
+<?php endif; ?>
 <!-- Message d'erreur personnalisé pour les permissions -->
 <div id="perm-error-msg-<?php echo $randomIdIndex; ?>" style="display: none;">
     <p style="margin: 0;"><strong>Accès refusé !</strong> Vous ne possédez pas les droits nécessaires pour effectuer cette action sur cette annotation.</p>

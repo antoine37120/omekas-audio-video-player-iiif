@@ -37,6 +37,8 @@ class Module extends AbstractModule
             'mms_shared_secret' => $settings->get('audioplayer_mms_shared_secret', ''),
             'mms_app_id' => $settings->get('audioplayer_mms_app_id', 'omekas'),
             'subtitle_field_mapping' => $settings->get('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}'),
+            'access_denied_text' => $settings->get('audioplayer_access_denied_text', '<p>Vous n\'avez pas accès aux médias de cet item. Contactez les administrateurs du site pour obtenir plus de droits. Cliquez ici =&gt; <a href="{legal_url}">mentions légales</a></p>'),
+            'annotation_relation' => $settings->get('audioplayer_annotation_relation', 'media'),
         ];
         return $renderer->partial('audio-player/admin/config-form', $data);
     }
@@ -64,6 +66,8 @@ class Module extends AbstractModule
         $settings->set('audioplayer_mms_shared_secret', $params['mms_shared_secret']);
         $settings->set('audioplayer_mms_app_id', $params['mms_app_id']);
         $settings->set('audioplayer_subtitle_field_mapping', $params['subtitle_field_mapping'] ?? '{"url":"url","language":"language_code","label":"language_label"}');
+        $settings->set('audioplayer_access_denied_text', $params['access_denied_text'] ?? '');
+        $settings->set('audioplayer_annotation_relation', in_array($params['annotation_relation'] ?? '', ['media', 'item'], true) ? $params['annotation_relation'] : 'media');
     }
 
     public function onBootstrap(MvcEvent $event)

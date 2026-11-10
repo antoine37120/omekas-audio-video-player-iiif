@@ -29,6 +29,7 @@ return [
         'factories' => [
             'audioPlayer' => View\Helper\AudioPlayerFactory::class,
             'audioPlayerForItem' => View\Helper\AudioPlayerForItemFactory::class,
+            'audioPlayerAccessDenied' => View\Helper\AudioPlayerAccessDeniedFactory::class,
         ],
     ],
     'resource_page_block_layouts' => [

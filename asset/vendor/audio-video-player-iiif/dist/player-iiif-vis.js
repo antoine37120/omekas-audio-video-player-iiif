@@ -63161,6 +63161,7 @@ class W_e extends HTMLElement {
       "iiif-permissions-path",
       "permissions-map",
       "permission-error-selector",
+      "access-denied-selector",
       "api-base-url",
       "resource-id",
       "share-iframe-url",
@@ -63173,7 +63174,7 @@ class W_e extends HTMLElement {
     ];
   }
   constructor() {
-    super(), this._iiifAnnotationListUrl = null, this._mediaUrl = null, this._mediaType = "audio", this._waveFormUrl = null, this._subtitleFilesUrl = null, this._subtitleListUrl = null, this._subtitleListPromise = null, this._subtitleFieldMapping = { url: "url", language: "language", label: "label" }, this._waveformStrokeColor = "rgba(0, 0, 0, 0.2)", this._waveformStrokeWidth = 1, this._annotationMinTimeToDisplay = 15, this._annotationPropertiesToDisplay = ["time", "text", "author"], this._canAddAnnotation = !0, this._canEditAllAnnotation = !0, this._canUpdateAnnotationForAuthorName = null, this._colors = ["#1890ff", "#333333", "#ffffff", "#eeeeee"], this._iiifPermissionsPath = "omeka:permissions", this._permissionsMap = "add:create,edit:edit,delete:delete", this._permissionErrorSelector = null, this._errorTimeout = null, this._apiBaseUrl = null, this._resourceId = null, this._shareIframeUrl = null, this._forceEmbeddedMode = !1, this._playbackRates = [0.5, 1, 1.25, 1.5, 2], this._helpSelector = null, this._heightAudio = 250, this._heightVideo = 450, this._heightAnnotations = 150, this._hasAnnotations = !1, this.isEmbedded = !1, this._checkEmbeddedStatus(), this.player = null, this.timeline = null, this.items = new Ea([]), this.clickTimeout = null, this.startClickTime = 0, this.startClickPos = { x: 0, y: 0 };
+    super(), this._iiifAnnotationListUrl = null, this._mediaUrl = null, this._mediaType = "audio", this._waveFormUrl = null, this._subtitleFilesUrl = null, this._subtitleListUrl = null, this._subtitleListPromise = null, this._subtitleFieldMapping = { url: "url", language: "language", label: "label" }, this._waveformStrokeColor = "rgba(0, 0, 0, 0.2)", this._waveformStrokeWidth = 1, this._annotationMinTimeToDisplay = 15, this._annotationPropertiesToDisplay = ["time", "text", "author"], this._canAddAnnotation = !0, this._canEditAllAnnotation = !0, this._canUpdateAnnotationForAuthorName = null, this._colors = ["#1890ff", "#333333", "#ffffff", "#eeeeee"], this._iiifPermissionsPath = "omeka:permissions", this._permissionsMap = "add:create,edit:edit,delete:delete", this._permissionErrorSelector = null, this._accessDeniedSelector = null, this._errorTimeout = null, this._apiBaseUrl = null, this._resourceId = null, this._shareIframeUrl = null, this._forceEmbeddedMode = !1, this._playbackRates = [0.5, 1, 1.25, 1.5, 2], this._helpSelector = null, this._heightAudio = 250, this._heightVideo = 450, this._heightAnnotations = 150, this._hasAnnotations = !1, this.isEmbedded = !1, this._checkEmbeddedStatus(), this.player = null, this.timeline = null, this.items = new Ea([]), this.clickTimeout = null, this.startClickTime = 0, this.startClickPos = { x: 0, y: 0 };
   }
   connectedCallback() {
     this.render(), this.initPlayer(), this.initTimeline(), this.loadData(), this.updateContainerHeight();
@@ -63268,6 +63269,9 @@ class W_e extends HTMLElement {
           break;
         case "permission-error-selector":
           this._permissionErrorSelector = i;
+          break;
+        case "access-denied-selector":
+          this._accessDeniedSelector = i;
           break;
         case "api-base-url":
           this._apiBaseUrl = i;
@@ -63831,12 +63835,44 @@ class W_e extends HTMLElement {
   }
   async loadIIIFAnnotations(e) {
     try {
-      const i = await (await fetch(e)).json();
+      const t = await fetch(e);
+      if (!t.ok) {
+        let s = null;
+        try {
+          s = await t.json();
+        } catch {
+        }
+        this.items.clear(), this.timeline && this.timeline.fit(), s && s.accessDenied === !0 ? this.showAccessDenied() : (this.hideAccessDenied(), console.error("IIIF annotations: HTTP", t.status, e));
+        return;
+      }
+      this.hideAccessDenied();
+      const i = await t.json();
       let n = [];
       i["@type"] === "sc:AnnotationList" && i.resources ? n = i.resources.map((s, a) => this._processIIIFItem(s, a)) : (i.items || i.type === "AnnotationPage" && i.items) && (n = (i.items || (i.type === "AnnotationPage" ? i.items : [])).map((a, o) => this._processIIIFItem(a, o))), this.items.clear(), this.items.add(n), this.timeline && this.timeline.fit(), this.updateAnnotationDisplay(0);
     } catch (t) {
       console.error("Error loading IIIF annotations:", t);
     }
+  }
+  /**
+   * Affiche le message d'accès refusé. Le texte et le lien sont fournis par
+   * l'intégrateur via l'attribut access-denied-selector (élément masqué du
+   * DOM), afin de rester traduisible et de pointer vers les mentions légales
+   * du site.
+   */
+  showAccessDenied() {
+    let e = this.querySelector(".access-denied-message");
+    if (!e) {
+      const t = this._accessDeniedSelector ? document.querySelector(this._accessDeniedSelector) : null;
+      if (!t) return;
+      e = document.createElement("div"), e.className = "access-denied-message", e.innerHTML = t.innerHTML;
+      const i = this.querySelector(".annotation-display");
+      i ? i.parentNode.insertBefore(e, i) : this.querySelector(".player-container")?.appendChild(e);
+    }
+    e.style.display = "block";
+  }
+  hideAccessDenied() {
+    const e = this.querySelector(".access-denied-message");
+    e && (e.style.display = "none");
   }
   async loadWaveform(e) {
     try {

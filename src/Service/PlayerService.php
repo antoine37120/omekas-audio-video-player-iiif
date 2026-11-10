@@ -15,9 +15,21 @@ class PlayerService
      */
     protected $settings;
 
-    public function __construct(Settings $settings)
+    /**
+     * @var \Doctrine\DBAL\Connection|null
+     */
+    protected $connection;
+
+    public function __construct(Settings $settings, $connection = null)
     {
         $this->settings = $settings;
+        // Omeka\Connection encapsule la connexion DBAL : on déballe pour
+        // disposer directement de fetchOne().
+        if ($connection instanceof \Omeka\Connection\Connection) {
+            $this->connection = $connection->getWrappedConnection();
+        } else {
+            $this->connection = $connection;
+        }
     }
 
     /**
@@ -318,6 +330,36 @@ class PlayerService
     }
 
     /**
+     * Get the identifier that annotations are attached to.
+     *
+     * Les annotations vivent dans `media_markers.resource_id`, dont la valeur
+     * dépend de la façon dont elles ont été importées : soit l'ID du média,
+     * soit l'ID de l'item parent. Ce réglage évite de figer un choix dans le
+     * code et de devoir réimporter les annotations si l'autre convention a
+     * été utilisée en production.
+     *
+     * @param AbstractResourceEntityRepresentation $resource Media ou Item
+     * @return int
+     */
+    public function getAnnotationResourceId(AbstractResourceEntityRepresentation $resource): int
+    {
+        if ($this->isItemRelation() && $resource->resourceName() === 'media') {
+            return (int) $resource->item()->id();
+        }
+        return (int) $resource->id();
+    }
+
+    /**
+     * Indique si les annotations sont rattachées à l'item parent (et non au média).
+     *
+     * @return bool
+     */
+    public function isItemRelation(): bool
+    {
+        return $this->settings->get('audioplayer_annotation_relation', 'media') === 'item';
+    }
+
+    /**
      * Get the primary audio/video media for an item.
      *
      * @param ItemRepresentation $item
@@ -327,5 +369,28 @@ class PlayerService
     {
         // Return the item's primary media if set
         return $item->primaryMedia();
+    }
+
+    /**
+     * Indique si l'item possède un média principal en base, même si l'utilisateur
+     * courant n'a pas le droit de le consulter.
+     *
+     * primaryMedia() renvoie null dans les deux cas « pas de média » et « média
+     * invisible », ce qui empêche de distinguer une vraie absence d'un refus
+     * d'accès. On interroge donc directement la table `item`.
+     *
+     * @param ItemRepresentation $item
+     * @return bool
+     */
+    public function itemHasPrimaryMediaInDatabase(ItemRepresentation $item): bool
+    {
+        $connection = $this->connection;
+        if (!$connection) {
+            return false;
+        }
+        return (bool) $connection->fetchOne(
+            'SELECT primary_media_id FROM `item` WHERE id = ?',
+            [$item->id()]
+        );
     }
 }

@@ -1,9 +1,14 @@
 <?php
 $media = $media ?? null;
 $resource = $resource ?? null;
+$accessDenied = $accessDenied ?? false;
 ?>
 
-<?php if ($media): ?>
+<?php if ($accessDenied): ?>
+    <div class="audio-player-resource-block">
+        <?php echo $this->audioPlayerAccessDenied(); ?>
+    </div>
+<?php elseif ($media): ?>
     <div class="audio-player-resource-block">
         <?php echo $this->audioPlayer($media); ?>
     </div>

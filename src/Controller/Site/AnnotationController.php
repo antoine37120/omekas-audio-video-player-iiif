@@ -2,6 +2,7 @@
 namespace AudioPlayer\Controller\Site;
 
 use AudioPlayer\Service\AnnotationService;
+use AudioPlayer\Service\PlayerService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
@@ -12,9 +13,15 @@ class AnnotationController extends AbstractActionController
      */
     protected $service;
 
-    public function __construct(AnnotationService $service)
+    /**
+     * @var PlayerService
+     */
+    protected $playerService;
+
+    public function __construct(AnnotationService $service, PlayerService $playerService)
     {
         $this->service = $service;
+        $this->playerService = $playerService;
     }
 
     public function indexAction()
@@ -248,51 +255,127 @@ class AnnotationController extends AbstractActionController
 
     /**
      * Get annotations in IIIF format for a media resource
-     * URL: /s/{site-slug}/audio-player/annotation/iiif/{media-id}
+     * URL: /s/{site-slug}/audio-player/annotation/iiif/{id}
+     *
+     * {id} désigne la ressource à laquelle les annotations sont rattachées :
+     * un média, ou l'item parent selon le réglage `annotation_relation`.
      */
     public function iiifAction()
     {
-        $mediaId = $this->params()->fromRoute('id');
+        $id = $this->params()->fromRoute('id');
         $siteSlug = $this->params()->fromRoute('site-slug');
 
-        if (!$mediaId) {
+        if (!$id) {
             $this->getResponse()->setStatusCode(400);
-            return $this->returnJson(['error' => 'Missing media ID']);
+            return $this->returnJson(['error' => 'Missing resource ID']);
         }
 
-        // Get the media entity to retrieve its URL
+        // L'accès à la ressource est arbitré par Omeka uniquement : $api->read()
+        // lève NotFoundException si l'utilisateur courant n'a pas le droit de voir
+        // la ressource (y compris un média privé pour un visiteur anonyme), et
+        // renvoie l'entité s'il l'a. On ne surenchérit pas avec un test de
+        // isPublic(), qui interdirait aussi les médias privés aux ayants droit.
         $api = $this->getPluginManager()->get('api');
         try {
-            $media = $api->read('media', $mediaId)->getContent();
-            // Vérifier si le média est public
-            if (!$media->isPublic()) {
+            $resource = $this->readAnnotationResource($api, $id);
+            $mediaUrl = $this->getResourceMediaUrl($resource);
+        } catch (\Omeka\Api\Exception\PermissionDeniedException $e) {
+            // Omeka a explicitement refusé : c'est ce cas, et lui seul, que le
+            // player traduit par le message « accès refusé ».
+            $this->getResponse()->setStatusCode(403);
+            return $this->returnJson(['error' => 'Access denied', 'accessDenied' => true]);
+        } catch (\Omeka\Api\Exception\NotFoundException $e) {
+            // Omeka renvoie NotFoundException aussi bien pour une ressource
+            // absente que pour une ressource invisible à cet utilisateur. Pour
+            // ne pas afficher un message de droits trompeur, on tranche sur
+            // l'existence réelle de la ligne : si la ressource existe mais que
+            // l'API a refusé, c'est bien un refus d'accès.
+            if ($this->resourceExists($id)) {
                 $this->getResponse()->setStatusCode(403);
-                return $this->returnJson(['error' => 'Media is not public']);
+                return $this->returnJson(['error' => 'Access denied', 'accessDenied' => true]);
             }
-            $mediaUrl = $media->originalUrl();
-        } catch (\Exception $e) {
             $this->getResponse()->setStatusCode(404);
-            return $this->returnJson(['error' => 'Media not found']);
+            return $this->returnJson(['error' => 'Resource not found', 'accessDenied' => false]);
         }
 
-
         // Convert annotations to IIIF format with user permissions
-        $permissionsCallback = function($id, $annotation) {
-            return $this->checkPermissions($id, $annotation);
+        $permissionsCallback = function($publicId, $annotation) {
+            return $this->checkPermissions($publicId, $annotation);
         };
-        $iiifData = $this->service->convertToIIIF($mediaId, $mediaUrl, $permissionsCallback);
+        $iiifData = $this->service->convertToIIIF($id, $mediaUrl, $permissionsCallback);
 
         $iiifData['controller'] = 'site' ;
         // Set the ID to the current request URL
         $iiifData['id'] = $this->url()->fromRoute(
             'site/audio-player/annotation-iiif',
-            ['id' => $mediaId, 'site-slug' => $siteSlug],
+            ['id' => $id, 'site-slug' => $siteSlug],
             ['force_canonical' => true]
         );
         // Set proper content type for IIIF
         $this->getResponse()->getHeaders()->addHeaderLine('Content-Type', 'application/ld+json;profile="http://iiif.io/api/presentation/3/context.json"');
 
         return $this->returnJson($iiifData);
+    }
+
+    /**
+     * Résout la ressource portant les annotations, selon le réglage de relation.
+     *
+     * En mode « media », {id} est l'ID du média. En mode « item », {id} est l'ID
+     * de l'item et on remonte à son média principal pour construire l'URL du
+     * média dans la cible IIIF.
+     *
+     * @throws \Omeka\Api\Exception\NotFoundException si l'accès est refusé
+     */
+    protected function readAnnotationResource($api, $id)
+    {
+        if ($this->playerService->isItemRelation()) {
+            $item = $api->read('items', $id)->getContent();
+            $media = $item->primaryMedia();
+            return $media ?: $item;
+        }
+
+        return $api->read('media', $id)->getContent();
+    }
+
+    /**
+     * Indique si la ressource existe réellement en base, indépendamment des
+     * droits de l'utilisateur courant. Sert uniquement à distinguer « absent »
+     * de « refusé », l'API d'Omeka confondant les deux dans NotFoundException.
+     *
+     * @param mixed $id
+     * @return bool
+     */
+    protected function resourceExists($id)
+    {
+        // Requête DBAL volontaire : le filtre de visibilité Doctrine
+        // (ResourceVisibilityFilter) masquerait justement la ressource privée
+        // dont on cherche à savoir si elle existe. On ne lit ici aucune donnée
+        // métier, seulement la présence de la ligne.
+        $connection = $this->getEvent()->getApplication()
+            ->getServiceManager()
+            ->get('Omeka\Connection');
+
+        return (bool) $connection->fetchOne(
+            'SELECT 1 FROM `resource` WHERE id = ?',
+            [$id]
+        );
+    }
+
+    /**
+     * Construit l'URL du média d'une ressource, en déléguant à PlayerService
+     * pour respecter les patterns et le token HMAC configurés.
+     */
+    protected function getResourceMediaUrl($resource)
+    {
+        // PlayerService::getMediaUrl() attend un média ; sur un item on prend
+        // son média principal, sans quoi aucun pattern ne s'applique.
+        if ($resource->resourceName() === 'items' && method_exists($resource, 'primaryMedia')) {
+            $resource = $resource->primaryMedia();
+        }
+        if (!$resource) {
+            return '';
+        }
+        return $this->playerService->getMediaUrl($resource);
     }
 
     /**

@@ -29,6 +29,23 @@ $media = $this->media;
             line-height: normal;
         }
 
+        /* Sans composant chargé, le style du bundle n'est pas disponible. */
+        .access-denied-message {
+            margin: 10px;
+            padding: 12px 16px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .access-denied-message a {
+            color: #856404;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -36,7 +53,10 @@ $media = $this->media;
         <?php 
         $siteSlug = $this->params()->fromRoute('site-slug');
         $apiBaseUrl = $this->url('site/audio-player/annotation', ['site-slug' => $siteSlug], ['force_canonical' => true]);
-        $iiifUrl = $this->url('site/audio-player/annotation-iiif', ['site-slug' => $siteSlug, 'id' => $media->id()], ['force_canonical' => true]);
+        // Même source de vérité que common/audio-video-player.phtml : l'ID auquel
+        // les annotations sont rattachées dépend du réglage annotation_relation.
+        $resourceId = $this->playerService->getAnnotationResourceId($media);
+        $iiifUrl = $this->url('site/audio-player/annotation-iiif', ['site-slug' => $siteSlug, 'id' => $resourceId], ['force_canonical' => true]);
 
         $mediaUrl = $this->mediaUrl;
         $waveformUrl = $this->waveformUrl;
@@ -63,7 +83,7 @@ $heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
         <?php endif; ?>
         <annotation-player-iiif
             api-base-url="<?php echo $this->escapeHtml($apiBaseUrl); ?>"
-            resource-id="<?php echo $this->escapeHtml($media->id()); ?>"
+            resource-id="<?php echo $this->escapeHtml($resourceId); ?>"
             iiif-annotation-list-url="<?php echo $this->escapeHtml($iiifUrl); ?>"
             media-url="<?php echo $this->escapeHtml($mediaUrl); ?>"
             media-type="<?php echo $this->playerService->getMediaType($media); ?>"
@@ -88,9 +108,20 @@ $heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
             subtitle-field-mapping='<?php echo $this->escapeHtml($this->setting('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}')); ?>'
             <?php endif; ?>
             <?php echo $helpText ? 'help-selector="#audio-player-help-text"' : ''; ?>
+            access-denied-selector="#audio-player-access-denied"
         ></annotation-player-iiif>
+        <?php
+        $accessDeniedText = $this->setting('audioplayer_access_denied_text', '');
+        if ($accessDeniedText):
+            $legalUrl = $this->url('site/page', ['site-slug' => $siteSlug, 'page-slug' => 'mentions-legales']);
+            $accessDeniedText = str_replace('{legal_url}', $this->escapeHtml($legalUrl), $accessDeniedText);
+        ?>
+        <div id="audio-player-access-denied" style="display: none;"><?php echo $accessDeniedText; ?></div>
+        <?php endif; ?>
     </div>
      <script type="module" src="<?php echo $this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.js', 'AudioPlayer'); ?>"></script>
+    <?php elseif (!empty($this->accessDenied)): ?>
+        <?php echo $this->audioPlayerAccessDenied(); ?>
     <?php elseif ($this->isDebug && !empty($this->reasons)): ?>
         <div style="padding: 20px; color: #856404; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px;">
             <p><strong>AudioPlayer Debug (Embed):</strong></p>

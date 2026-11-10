@@ -37,6 +37,17 @@ class AudioPlayerResourcePageBlockLayout implements ResourcePageBlockLayoutInter
         if ($resource->resourceName() === 'items') {
             $media = $this->playerService->getPrimaryMedia($resource);
             if (!$media) {
+                // primaryMedia() renvoie null aussi bien quand l'item n'a pas de
+                // média que quand le média existe mais est invisible pour cet
+                // utilisateur. Dans le second cas, il ne faut pas parler
+                // d'absence : c'est un problème de droits.
+                if ($this->playerService->itemHasPrimaryMediaInDatabase($resource)) {
+                    return $view->partial('audio-player/site/resource-page-block-layout', [
+                        'media' => null,
+                        'resource' => $resource,
+                        'accessDenied' => true,
+                    ]);
+                }
                 $reasons[] = 'Aucun média principal (audio ou vidéo) trouvé pour cet item.';
             }
         } elseif ($resource->resourceName() === 'media') {
