@@ -39,6 +39,10 @@ class Module extends AbstractModule
             'subtitle_field_mapping' => $settings->get('audioplayer_subtitle_field_mapping', '{"url":"url","language":"language_code","label":"language_label"}'),
             'access_denied_text' => $settings->get('audioplayer_access_denied_text', '<p>Vous n\'avez pas accès aux médias de cet item. Contactez les administrateurs du site pour obtenir plus de droits. Cliquez ici =&gt; <a href="{legal_url}">mentions légales</a></p>'),
             'annotation_relation' => $settings->get('audioplayer_annotation_relation', 'media'),
+            'embed_footer_enabled' => $settings->get('audioplayer_embed_footer_enabled', false),
+            'embed_footer_source_label' => $settings->get('audioplayer_embed_footer_source_label', ''),
+            'embed_footer_item_link_label' => $settings->get('audioplayer_embed_footer_item_link_label', ''),
+            'embed_footer_item_link_new_tab' => $settings->get('audioplayer_embed_footer_item_link_new_tab', false),
         ];
         return $renderer->partial('audio-player/admin/config-form', $data);
     }
@@ -68,6 +72,13 @@ class Module extends AbstractModule
         $settings->set('audioplayer_subtitle_field_mapping', $params['subtitle_field_mapping'] ?? '{"url":"url","language":"language_code","label":"language_label"}');
         $settings->set('audioplayer_access_denied_text', $params['access_denied_text'] ?? '');
         $settings->set('audioplayer_annotation_relation', in_array($params['annotation_relation'] ?? '', ['media', 'item'], true) ? $params['annotation_relation'] : 'media');
+        // Le pied de page de l'iframe est désactivé tant que le libellé de source
+        // n'est pas renseigné : sans lui, le pied n'aurait rien à afficher.
+        $footerSourceLabel = trim((string) ($params['embed_footer_source_label'] ?? ''));
+        $settings->set('audioplayer_embed_footer_source_label', $footerSourceLabel);
+        $settings->set('audioplayer_embed_footer_item_link_label', trim((string) ($params['embed_footer_item_link_label'] ?? '')));
+        $settings->set('audioplayer_embed_footer_item_link_new_tab', !empty($params['embed_footer_item_link_new_tab']));
+        $settings->set('audioplayer_embed_footer_enabled', !empty($params['embed_footer_enabled']) && $footerSourceLabel !== '');
     }
 
     public function onBootstrap(MvcEvent $event)

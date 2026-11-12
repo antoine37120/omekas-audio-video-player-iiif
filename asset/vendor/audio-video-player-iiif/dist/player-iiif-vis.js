@@ -63482,7 +63482,12 @@ class Q_e extends HTMLElement {
   updateContainerHeight() {
     const e = this.querySelector(".player-container");
     if (!e) return;
-    const t = this._mediaType === "video" ? this._heightVideo : this._heightAudio, i = this._showMarkersList && this._hasAnnotations ? this._heightAnnotations : 0, n = this._mediaType === "video" ? 0 : this.measureSubtitleMenuHeight();
+    const t = this._mediaType === "video" ? this._heightVideo : this._heightAudio, i = this._showMarkersList && this._hasAnnotations ? this._heightAnnotations : 0;
+    if (e.classList.toggle("no-markers-list", !this._showMarkersList), !this._showMarkersList) {
+      e.style.height = "", e.style.overflowY = "";
+      return;
+    }
+    const n = this._mediaType === "video" ? 0 : this.measureSubtitleMenuHeight();
     this._subtitleMenuHeight = n;
     const s = t + i + n;
     e.style.height = s + "px", e.style.overflowY = "auto";

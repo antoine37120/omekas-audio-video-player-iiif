@@ -258,6 +258,54 @@
 
 <div class="field">
     <div class="field-meta">
+        <label for="embed_footer_enabled">Footer in the shareable player (iframe)</label>
+        <div class="field-description">
+            <?php echo $this->translate('Display a footer under the player in the embed page, with the source of the document and a link to the item page. Requires the source label below.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="checkbox" name="embed_footer_enabled" id="embed_footer_enabled" value="1" <?php echo $embed_footer_enabled ? 'checked' : ''; ?>>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="embed_footer_source_label">Footer source label</label>
+        <div class="field-description">
+            <?php echo $this->translate('Text displayed before the source of the document, for example "Source Crem". Leave empty to disable the footer.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="embed_footer_source_label" id="embed_footer_source_label" value="<?php echo $this->escapeHtml($embed_footer_source_label); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="embed_footer_item_link_label">Footer item link label</label>
+        <div class="field-description">
+            <?php echo $this->translate('Text of the link to the item page, for example "See the item page". Leave empty to display the title of the item.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="text" name="embed_footer_item_link_label" id="embed_footer_item_link_label" value="<?php echo $this->escapeHtml($embed_footer_item_link_label); ?>">
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
+        <label for="embed_footer_item_link_new_tab">Footer item link opens in a new tab</label>
+        <div class="field-description">
+            <?php echo $this->translate('Open the item page in a new tab instead of the current one. Recommended when the player is embedded in another site.'); ?>
+        </div>
+    </div>
+    <div class="inputs">
+        <input type="checkbox" name="embed_footer_item_link_new_tab" id="embed_footer_item_link_new_tab" value="1" <?php echo $embed_footer_item_link_new_tab ? 'checked' : ''; ?>>
+    </div>
+</div>
+
+<div class="field">
+    <div class="field-meta">
         <label for="playback_rates"><?php echo $this->translate('Playback Rates'); ?></label>
         <div class="field-description">
             <?php echo $this->translate('Comma-separated list of playback rates (e.g. [0.5, 1, 1.5, 2, 4]).'); ?>

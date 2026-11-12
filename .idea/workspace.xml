@@ -5,8 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44513567-dea7-4243-b528-96b5c70a2f8d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset/css/player-iiif-dependencies.css" beforeDir="false" afterPath="$PROJECT_DIR$/asset/css/player-iiif-dependencies.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_daily_digest.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_daily_digest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_docs_gardener.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_docs_gardener.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_idle_suggester.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_idle_suggester.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_pr_issue_matchmaker.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_pr_issue_matchmaker.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_security_whisperer.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_security_whisperer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_setup_coach.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/buddy_setup_coach.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/chats/workflows/refact_self_critic.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/chats/workflows/refact_self_critic.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/memory_ops.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/memory_ops.jsonl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/runtime_queue.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/runtime_queue.jsonl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.refact/buddy/state.json" beforeDir="false" afterPath="$PROJECT_DIR$/.refact/buddy/state.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module.php" beforeDir="false" afterPath="$PROJECT_DIR$/Module.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset/vendor/audio-video-player-iiif/dist/player-iiif-vis.css" beforeDir="false" afterPath="$PROJECT_DIR$/asset/vendor/audio-video-player-iiif/dist/player-iiif-vis.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset/vendor/audio-video-player-iiif/dist/player-iiif-vis.js" beforeDir="false" afterPath="$PROJECT_DIR$/asset/vendor/audio-video-player-iiif/dist/player-iiif-vis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/module.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config/module.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/audio-player/admin/config-form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/view/audio-player/admin/config-form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/audio-player/site/player/embed.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/view/audio-player/site/player/embed.phtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,10 +32,77 @@
   <component name="ComposerSettings">
     <execution />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="75" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../bin/php/php-8.3.13-nts-Win32-vs16-x64/php.exe" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0" />
+      <entry key="M5" value="1.0" />
+      <entry key="M10" value="1.0" />
+      <entry key="M15" value="1.0" />
+      <entry key="M30" value="1.0" />
+      <entry key="H1" value="1.0" />
+      <entry key="H2" value="1.0" />
+      <entry key="H4" value="1.0" />
+      <entry key="D1" value="1.0" />
+      <entry key="W1" value="1.0" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9395227492140118" />
+      <entry key="MS500" value="0.9876008614453725" />
+      <entry key="S2" value="0.9968856972203758" />
+      <entry key="S5" value="0.9987531130852756" />
+      <entry key="S10" value="0.9993763620805105" />
+      <entry key="S30" value="0.9997920774647191" />
+      <entry key="S60" value="0.9998960333278251" />
+      <entry key="M2" value="0.9999480153127087" />
+      <entry key="M5" value="0.9999792058007856" />
+      <entry key="M10" value="0.9999896028463424" />
+      <entry key="M15" value="0.999993068552217" />
+      <entry key="M30" value="0.9999965342701028" />
+      <entry key="H1" value="0.99999826713355" />
+      <entry key="H2" value="0.9999991335663997" />
+      <entry key="H4" value="0.999999566783106" />
+      <entry key="D1" value="0.9999999277971713" />
+      <entry key="W1" value="0.9999999896853099" />
+    </decayedShown>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../../laragon/bin/php/php-8.3.13-nts-Win32-vs16-x64/php.exe" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -28,29 +111,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-PS-252.28238.9" />
-        <option value="bundled-php-predefined-a98d8de5180a-58f58c5035b3-com.jetbrains.php.sharedIndexes-PS-252.28238.9" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PS-261.27258.54" />
+        <option value="bundled-php-predefined-a98d8de5180a-6bbb74dbab74-com.jetbrains.php.sharedIndexes-PS-261.27258.54" />
       </set>
     </attachedChunks>
   </component>
@@ -65,6 +152,7 @@
       <workItem from="1764168597056" duration="7791000" />
       <workItem from="1764688478918" duration="595000" />
       <workItem from="1764844619124" duration="595000" />
+      <workItem from="1794503333906" duration="618000" />
     </task>
     <servers />
   </component>

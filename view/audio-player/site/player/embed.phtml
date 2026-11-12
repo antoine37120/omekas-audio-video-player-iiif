@@ -46,6 +46,30 @@ $media = $this->media;
             text-decoration: underline;
         }
 
+        /* Pied de page : crédits discrets, collés au lecteur, alignés à droite. */
+        .player-footer {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2px 10px 4px;
+            text-align: right;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #8a94a6;
+        }
+
+        .player-footer-item-link {
+            margin-left: 6px;
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        .player-footer-item-link:hover,
+        .player-footer-item-link:focus-visible {
+            color: #5b6577;
+        }
+
     </style>
 </head>
 <body>
@@ -121,6 +145,46 @@ $heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
             $accessDeniedText = str_replace('{legal_url}', $this->escapeHtml($legalUrl), $accessDeniedText);
         ?>
         <div id="audio-player-access-denied" style="display: none;"><?php echo $accessDeniedText; ?></div>
+        <?php endif; ?>
+        <?php
+        // Pied de page : l'enveloppe flexible retire la hauteur du pied du
+        // lecteur, qui occupe sinon 100vh et masquerait le pied.
+        $footerSourceLabel = trim((string) $this->setting('audioplayer_embed_footer_source_label', ''));
+        if ($this->setting('audioplayer_embed_footer_enabled', false) && $footerSourceLabel !== ''):
+            $footerItem = $media->item();
+            $footerItemLinkLabel = trim((string) $this->setting('audioplayer_embed_footer_item_link_label', ''));
+        ?>
+        <style>
+            annotation-player-iiif .player-container.is-embedded {
+                height: calc(100vh - var(--player-footer-height, 0px));
+            }
+        </style>
+        <div class="player-footer" id="player-footer">
+            <span class="player-footer-source"><?php echo $this->escapeHtml($footerSourceLabel); ?></span>
+            <?php if ($footerItem): ?>
+            <?php $footerNewTab = (bool) $this->setting('audioplayer_embed_footer_item_link_new_tab', false); ?>
+            <a class="player-footer-item-link" href="<?php echo $this->escapeHtmlAttr($footerItem->url()); ?>"<?php echo $footerNewTab ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                <?php echo $this->escapeHtml($footerItemLinkLabel !== '' ? $footerItemLinkLabel : (string) $footerItem->displayTitle()); ?>
+            </a>
+            <?php endif; ?>
+        </div>
+        <script>
+            // La hauteur du pied est mesurée après chargement : elle dépend du
+            // libellé et de la largeur de l'iframe (retour à la ligne).
+            (function () {
+                function syncFooterHeight() {
+                    var footer = document.getElementById('player-footer');
+                    if (!footer) {
+                        return;
+                    }
+                    var height = Math.ceil(footer.getBoundingClientRect().height);
+                    document.documentElement.style.setProperty('--player-footer-height', height + 'px');
+                }
+                syncFooterHeight();
+                window.addEventListener('resize', syncFooterHeight);
+                window.addEventListener('load', syncFooterHeight);
+            })();
+        </script>
         <?php endif; ?>
     </div>
      <script type="module" src="<?php echo $this->assetUrl('vendor/audio-video-player-iiif/dist/player-iiif-vis.js', 'AudioPlayer'); ?>"></script>
