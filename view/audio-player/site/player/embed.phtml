@@ -72,6 +72,9 @@ $media = $this->media;
 $heightVideo = $this->setting('audioplayer_height_video', '450');
 $heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
         $canAddAnnotation = $this->identity() ? 'true' : 'false';
+        // Le partage d'intégration transmet `markers-list=1` pour afficher la liste
+        // des annotations sous le lecteur ; toute autre valeur ou absence = masquée.
+        $showMarkersList = $this->params()->fromQuery('markers-list') === '1' ? 'true' : 'false';
         // URL de la page embed (cette page elle-même)
         $embedUrl = $this->url('site/audio-player/embed', ['site-slug' => $siteSlug, 'id' => $media->item()->id()], ['force_canonical' => true]);
         $mediaUrl = $this->mediaUrl ?? ($media ? $media->originalUrl() : '');
@@ -109,6 +112,7 @@ $heightAnnotations = $this->setting('audioplayer_height_annotations', '150');
             <?php endif; ?>
             <?php echo $helpText ? 'help-selector="#audio-player-help-text"' : ''; ?>
             access-denied-selector="#audio-player-access-denied"
+            show-markers-list="<?php echo $showMarkersList; ?>"
         ></annotation-player-iiif>
         <?php
         $accessDeniedText = $this->setting('audioplayer_access_denied_text', '');
